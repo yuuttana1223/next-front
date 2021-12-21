@@ -1,4 +1,5 @@
 import { VFC } from "react";
+import { Button } from "src/components/shared/Button";
 import { FloatingLabelInput } from "src/components/shared/Input/FloatingLabelInput";
 import { Maybe } from "../Message/Maybe";
 
@@ -9,6 +10,7 @@ type Props = {
     placeholder: string;
   }[];
   title: string;
+  buttonText: String;
 };
 
 export const AuthenticationForm: VFC<Props> = (props) => {
@@ -24,12 +26,7 @@ export const AuthenticationForm: VFC<Props> = (props) => {
           {input.placeholder}
         </FloatingLabelInput>
       ))}
-      <button
-        type="submit"
-        className="w-full py-3 text-center text-white rounded bg-emerald-400 hover:bg-emerald-500 focus:outline-none"
-      >
-        作成
-      </button>
+      <Button>{props.buttonText}</Button>
     </form>
   );
 };
