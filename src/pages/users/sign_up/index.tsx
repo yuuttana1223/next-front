@@ -1,8 +1,9 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { AuthenticationFormCard } from "src/components/Card/AuthenticationFormCard";
-import { AuthenticationFormLayout } from "src/components/Layout/AuthenticationFormLayout";
-import { AppLayout } from "src/layouts/AppLayout";
+import { AuthenticationForm } from "src/components/Authentication/Form/AuthenticationForm";
+import { Maybe } from "src/components/Authentication/Message/Maybe";
+import { AuthenticationLayout } from "src/components/Layout/AuthenticationLayout";
+import { GuestLayout } from "src/layouts/GuestLayout";
 
 const inputs = [
   { type: "name", name: "name", placeholder: "名前" },
@@ -15,6 +16,11 @@ const inputs = [
   },
 ];
 
+const link = {
+  href: "/users/sign_in",
+  value: "ログイン",
+};
+
 const SignUp: NextPage = () => {
   return (
     <>
@@ -22,11 +28,12 @@ const SignUp: NextPage = () => {
         <title>Sign up</title>
         <meta name="description" content="ユーザ登録ページ" />
       </Head>
-      <AppLayout>
-        <AuthenticationFormLayout>
-          <AuthenticationFormCard inputs={inputs} title="ユーザー登録" />
-        </AuthenticationFormLayout>
-      </AppLayout>
+      <GuestLayout>
+        <AuthenticationLayout>
+          <AuthenticationForm inputs={inputs} title="ユーザー登録" />
+          <Maybe link={link} message="登録済みの方はこちら " />
+        </AuthenticationLayout>
+      </GuestLayout>
     </>
   );
 };

@@ -1,5 +1,6 @@
 import { VFC } from "react";
-import { FloatingLabelInput } from "src/components/Input/FloatingLabelInput";
+import { FloatingLabelInput } from "src/components/shared/Input/FloatingLabelInput";
+import { Maybe } from "../Message/Maybe";
 
 type Props = {
   inputs: {
@@ -10,9 +11,9 @@ type Props = {
   title: string;
 };
 
-export const AuthenticationFormCard: VFC<Props> = (props) => {
+export const AuthenticationForm: VFC<Props> = (props) => {
   return (
-    <div className="w-full px-6 py-8 space-y-4 text-black bg-white rounded shadow-md">
+    <form className="space-y-4">
       <h1 className="mb-8 text-3xl text-center">{props.title}</h1>
       {props.inputs.map((input) => (
         <FloatingLabelInput
@@ -29,6 +30,6 @@ export const AuthenticationFormCard: VFC<Props> = (props) => {
       >
         作成
       </button>
-    </div>
+    </form>
   );
 };

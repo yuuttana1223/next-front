@@ -20,7 +20,7 @@ export const FloatingLabelInput: VFC<Props> = (props) => {
       />
       <label
         className={`absolute left-0 flex items-center text-opacity-50 text-gray-600 p-2 transition-all duration-200 ease-in-out ${
-          active ? "-top-4 text-xs bg-white" : "top-0 text-sm"
+          active ? "-top-4 text-xs bg-white text-blue-700" : "top-0 text-sm"
         }`}
         htmlFor={props.name}
       >
