@@ -21,6 +21,13 @@ export const SignUpForm: VFC = () => {
           placeholder: "パスワード",
         }}
       />
+      <FloatingLabelInput
+        input={{
+          type: "password",
+          name: "password_confirmation",
+          placeholder: "パスワード確認",
+        }}
+      />
       <span className="text-xs text-gray-400">
         英数字○桁以上のパスワードを入力してください
       </span>

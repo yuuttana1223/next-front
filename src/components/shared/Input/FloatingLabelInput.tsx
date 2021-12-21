@@ -1,4 +1,4 @@
-import { VFC, useState, ChangeEvent, ReactNode } from "react";
+import { VFC, useState } from "react";
 
 type Props = {
   input: {
