@@ -4,6 +4,7 @@ import { AuthenticationForm } from "src/components/Authentication/Form/Authentic
 import { Maybe } from "src/components/Authentication/Message/Maybe";
 import { AuthenticationLayout } from "src/components/Layout/AuthenticationLayout";
 import { GuestLayout } from "src/layouts/GuestLayout";
+import { PATH } from "src/urls/path";
 
 const inputs = [
   { type: "name", name: "name", placeholder: "名前" },
@@ -17,7 +18,7 @@ const inputs = [
 ];
 
 const link = {
-  href: "/users/sign_in",
+  href: PATH.USERS.SIGN_IN,
   value: "ログイン",
 };
 
@@ -30,7 +31,11 @@ const SignUp: NextPage = () => {
       </Head>
       <GuestLayout>
         <AuthenticationLayout>
-          <AuthenticationForm inputs={inputs} title="ユーザー登録" />
+          <AuthenticationForm
+            inputs={inputs}
+            title="ユーザー登録"
+            buttonText="登録"
+          />
           <Maybe link={link} message="登録済みの方はこちら " />
         </AuthenticationLayout>
       </GuestLayout>
