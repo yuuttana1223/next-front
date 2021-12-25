@@ -5,6 +5,9 @@ import { Maybe } from "src/components/Authentication/Message/Maybe";
 import { PATH } from "src/urls/path";
 import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import { ErrorMessage } from "src/components/Authentication/Message/ErrorMessage";
+import { reg } from "src/constants/email";
+import axios from "axios";
+import { API_URL } from "src/urls/api";
 
 export type Inputs = {
   email: string;
@@ -13,7 +16,19 @@ export type Inputs = {
 
 export const SignInForm: VFC = () => {
   const methods = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    axios
+      .post(`${API_URL}/auth/sign_in`, {
+        email: data.email,
+        password: data.password,
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <FormProvider {...methods}>
@@ -25,8 +40,7 @@ export const SignInForm: VFC = () => {
             name="email"
             placeholder="メールアドレス"
             validation={{
-              pattern:
-                /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}.[A-Za-z0-9]{1,}$/,
+              pattern: reg,
             }}
           />
           {methods.formState.errors.email && (
