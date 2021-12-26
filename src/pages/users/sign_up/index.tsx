@@ -1,6 +1,8 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { AppLayout } from "src/layouts/AppLayout";
+import { SignUpForm } from "src/components/Authentication/Form/SignUpForm";
+import { AuthenticationLayout } from "src/components/Layout/AuthenticationLayout";
+import { GuestLayout } from "src/layouts/GuestLayout";
 
 const SignUp: NextPage = () => {
   return (
@@ -9,7 +11,11 @@ const SignUp: NextPage = () => {
         <title>Sign up</title>
         <meta name="description" content="ユーザ登録ページ" />
       </Head>
-      <AppLayout>aa</AppLayout>
+      <GuestLayout>
+        <AuthenticationLayout>
+          <SignUpForm />
+        </AuthenticationLayout>
+      </GuestLayout>
     </>
   );
 };
