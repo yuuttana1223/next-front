@@ -1,4 +1,4 @@
-import { VFC } from "react";
+import { VFC, useContext } from "react";
 import { Button } from "src/components/shared/Button";
 import { FloatingLabelInput } from "src/components/shared/Input/FloatingLabelInput";
 import { Maybe } from "src/components/Authentication/Message/Maybe";
@@ -6,8 +6,11 @@ import { PATH } from "src/urls/path";
 import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import { ErrorMessage } from "src/components/Authentication/Message/ErrorMessage";
 import { reg } from "src/constants/email";
-import axios from "axios";
-import { API_URL } from "src/urls/api";
+import { signIn } from "src/apis/auth";
+import Cookies from "js-cookie";
+import { useRouter } from "next/router";
+import { AuthContext } from "src/providers/AuthProvider";
+import { AxiosError } from "axios";
 
 export type Inputs = {
   email: string;
@@ -15,18 +18,30 @@ export type Inputs = {
 };
 
 export const SignInForm: VFC = () => {
+  const { authState, setAuthState } = useContext(AuthContext);
+  const router = useRouter();
   const methods = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    axios
-      .post(`${API_URL}/auth/sign_in`, {
-        email: data.email,
-        password: data.password,
-      })
+  const onSubmit: SubmitHandler<Inputs> = (params) => {
+    signIn(params)
       .then((res) => {
-        console.log(res);
+        if (res.status === 200) {
+          Cookies.set("access_token", res.headers["access-token"]);
+          Cookies.set("client", res.headers["client"]);
+          Cookies.set("uid", res.headers["uid"]);
+          setAuthState((prevAuthState) => {
+            return {
+              ...prevAuthState,
+              isSignedIn: true,
+              currenUser: res.data,
+            };
+          });
+          router.push(PATH.ROOT);
+        } else {
+          console.log("登録できませんでした。");
+        }
       })
-      .catch((error) => {
-        console.log(error);
+      .catch((error: AxiosError) => {
+        console.error(error);
       });
   };
 

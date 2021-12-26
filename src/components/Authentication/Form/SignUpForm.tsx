@@ -1,4 +1,4 @@
-import { VFC } from "react";
+import { VFC, useContext } from "react";
 import { Button } from "src/components/shared/Button";
 import { FloatingLabelInput } from "src/components/shared/Input/FloatingLabelInput";
 import { Maybe } from "src/components/Authentication/Message/Maybe";
@@ -7,6 +7,10 @@ import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import { ErrorMessage } from "src/components/Authentication/Message/ErrorMessage";
 import { reg } from "src/constants/email";
 import { signUp } from "src/apis/auth";
+import Cookies from "js-cookie";
+import { AuthContext } from "src/providers/AuthProvider";
+import { useRouter } from "next/router";
+import { AxiosError } from "axios";
 
 type Inputs = {
   name: string;
@@ -16,10 +20,37 @@ type Inputs = {
 };
 
 export const SignUpForm: VFC = () => {
+  const { authState, setAuthState } = useContext(AuthContext);
+  const router = useRouter();
+
   const methods = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = (params) => {
-    signUp(params);
+    signUp(params)
+      .then((res) => {
+        if (res.status === 200) {
+          Cookies.set("access_token", res.headers["access-token"]);
+          Cookies.set("client", res.headers["client"]);
+          Cookies.set("uid", res.headers["uid"]);
+          setAuthState((prevAuthState) => {
+            return {
+              ...prevAuthState,
+              isSignedIn: true,
+              currenUser: res.data,
+            };
+          });
+          router.push(PATH.ROOT);
+        } else {
+          console.log("登録できませんでした。");
+        }
+      })
+      .catch((error: AxiosError) => {
+        console.error(error);
+      });
   };
+
+  if (authState.loading) {
+    return <>ローディング</>;
+  }
 
   return (
     <FormProvider {...methods}>
