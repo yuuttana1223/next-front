@@ -6,6 +6,7 @@ import {
   SetStateAction,
 } from "react";
 import { User } from "src/types/user";
+import { VFC } from "react";
 
 export const AuthContext = createContext(
   {} as {
@@ -20,7 +21,7 @@ type Auth = {
   currentUser?: User;
 };
 
-export const AuthProvider = (props: { children: ReactNode }) => {
+export const AuthProvider: VFC<{ children: ReactNode }> = (props) => {
   const [authState, setAuthState] = useState<Auth>({
     loading: false,
     isSignedIn: false,
