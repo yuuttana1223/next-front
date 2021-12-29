@@ -5,6 +5,6 @@ export const PATH = {
     SIGN_UP: "/users/sign_up",
   },
   REVIEWS: {
-    SHOW: (id: number) => `/reviews/${id}`,
+    SHOW: (id?: number) => `/reviews/${id}`,
   },
 };
