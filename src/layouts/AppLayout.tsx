@@ -4,11 +4,7 @@ import { HiMenu, HiOutlineUserCircle } from "react-icons/hi";
 import { Drawer } from "src/components/Drawer";
 import { KcgLogoLink } from "src/components/shared/Link/KcgLogoLink";
 
-type Props = {
-  children: ReactNode;
-};
-
-export const AppLayout: VFC<Props> = (props) => {
+export const AppLayout: VFC<{ children: ReactNode }> = (props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -34,7 +30,9 @@ export const AppLayout: VFC<Props> = (props) => {
         </div>
         <Drawer isOpen={isOpen} setIsOpen={setIsOpen} />
       </Header>
-      <main>{props.children}</main>
+      <main>
+        <div className="container px-5 py-24 mx-auto">{props.children}</div>
+      </main>
     </>
   );
 };
