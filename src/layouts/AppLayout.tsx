@@ -30,7 +30,9 @@ export const AppLayout: VFC<{ children: ReactNode }> = (props) => {
         </div>
         <Drawer isOpen={isOpen} setIsOpen={setIsOpen} />
       </Header>
-      <main>{props.children}</main>
+      <main>
+        <div className="container px-5 py-24 mx-auto">{props.children}</div>
+      </main>
     </>
   );
 };
