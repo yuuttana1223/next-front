@@ -4,4 +4,7 @@ export const PATH = {
     SIGN_IN: "/users/sign_in",
     SIGN_UP: "/users/sign_up",
   },
+  REVIEWS: {
+    SHOW: (id: number) => `/reviews/${id}`,
+  },
 };
