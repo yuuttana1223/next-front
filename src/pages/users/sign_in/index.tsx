@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { GuestLayout } from "src/layouts/GuestLayout";
-import { SignInForm } from "src/components/Authentication/Form/SignInForm";
+import { SignInForm } from "src/components/Form/SignInForm";
 
 const SignIn: NextPage = () => {
   return (
