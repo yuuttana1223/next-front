@@ -84,7 +84,7 @@ export const SignInForm: VFC = () => {
             href: PATH.USERS.SIGN_UP,
             text: "ユーザー登録",
           }}
-          message="登録済みの方はこちら "
+          message="登録されていない方はこちら "
         />
       </form>
     </FormProvider>

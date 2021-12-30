@@ -16,11 +16,11 @@ export const ReviewItem: VFC<Props> = (props) => {
   return (
     <div className="w-full p-4 md:w-1/2 lg:w-1/3">
       <div>
-        <div className="h-full overflow-hidden border-2 border-gray-200 rounded-lg shadow hover:bg-gray-50">
+        <div className="h-full overflow-hidden border-2 rounded-lg shadow hover:bg-gray-50">
           <div className="p-6">
             <h2 className="pb-1 mb-3 text-lg text-gray-900 border-b-2">
               <Link href={`${PATH.REVIEWS.SHOW(props.review?.id)}`}>
-                <a className="inline-block font-bold text-blue-600 border-b-2 border-blue-600 hover:text-blue-400 hover:border-blue-400">
+                <a className="inline-block font-bold text-blue-500 border-b-2 border-blue-500 hover:text-blue-700 hover:border-blue-700">
                   {props.review?.lecture_name} ({props.review?.teacher_name}
                   先生)
                 </a>
@@ -66,7 +66,7 @@ export const ReviewItem: VFC<Props> = (props) => {
                 size="24px"
                 className="inline"
               />
-              <span className="ml-1">コメント数: 2</span>
+              <span className="ml-1 align-bottom">コメント数: 2</span>
             </div>
           </div>
         </div>
@@ -85,7 +85,7 @@ export const ReviewItem: VFC<Props> = (props) => {
               size="24px"
               className="inline text-pink-300"
             />
-            お気に入りに追加
+            <span className="align-bottom">お気に入りに追加</span>
           </button>
         </div>
       </div>
