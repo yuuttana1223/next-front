@@ -4,9 +4,11 @@ import {
   ReactNode,
   Dispatch,
   SetStateAction,
+  useEffect,
 } from "react";
 import { User } from "src/types/user";
 import { VFC } from "react";
+import { fetchCurrentUser } from "src/apis/auth";
 
 export const AuthContext = createContext(
   {} as {
@@ -27,6 +29,18 @@ export const AuthProvider: VFC<{ children: ReactNode }> = (props) => {
     isSignedIn: false,
     currentUser: undefined,
   });
+
+  useEffect(() => {
+    fetchCurrentUser()?.then((res) => {
+      setAuthState((prevAuthState) => {
+        return {
+          ...prevAuthState,
+          isSignedIn: res.data.is_login,
+          currentUser: res.data.user,
+        };
+      });
+    });
+  }, []);
   return (
     <AuthContext.Provider value={{ authState, setAuthState }}>
       {props.children}
