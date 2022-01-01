@@ -26,7 +26,9 @@ export const Review: VFC = () => {
 
   return (
     <div>
-      <BackLink href={PATH.ROOT} />
+      <div className="mb-16">
+        <BackLink href={PATH.ROOT} />
+      </div>
       <div className="flex justify-center -m-4">
         <ReviewItem review={review} />
       </div>
