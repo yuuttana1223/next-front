@@ -1,23 +1,17 @@
 import { VFC } from "react";
-import { Review } from "src/types/review";
-import { API_URL } from "src/urls/api";
-import { fetcher } from "src/utils/fetcher";
-import useSWRImmutable from "swr/immutable";
 import { ReviewItem } from "src/components/Review/ReviewItem";
 import { NewButtonLink } from "src/components/shared/Link/NewButtonLink";
+import { useAllReviews } from "src/hooks/useAllReviews";
 
 export const Reviews: VFC = () => {
-  const { data: reviews, error } = useSWRImmutable<Review[], Error>(
-    `${API_URL}/reviews`,
-    fetcher
-  );
+  const { reviews, reviewsError, loading } = useAllReviews();
 
-  if (!reviews && !error) {
+  if (loading) {
     return <div>ローディング中</div>;
   }
 
-  if (error) {
-    return <div>{error.message}</div>;
+  if (reviewsError) {
+    return <div>{reviewsError.message}</div>;
   }
 
   return (
