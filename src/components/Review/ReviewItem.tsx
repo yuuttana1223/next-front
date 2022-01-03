@@ -16,11 +16,11 @@ export const ReviewItem: VFC<Props> = (props) => {
   return (
     <div className="w-full p-4 md:w-1/2 lg:w-1/3">
       <div>
-        <div className="h-full overflow-hidden border-2 rounded-lg shadow hover:bg-gray-50">
+        <div className="h-full overflow-hidden border-2 rounded-lg shadow">
           <div className="p-6">
             <h2 className="pb-1 mb-3 text-lg text-gray-900 border-b-2">
               <Link href={`${PATH.REVIEWS.SHOW(props.review?.id)}`}>
-                <a className="inline-block font-bold text-blue-500 border-b-2 border-blue-500 hover:text-blue-700 hover:border-blue-700">
+                <a className="inline-block font-bold text-blue-500 hover:text-blue-700">
                   {props.review?.lecture_name} ({props.review?.teacher_name}
                   先生)
                 </a>
