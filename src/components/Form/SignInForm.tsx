@@ -77,7 +77,7 @@ export const SignInForm: VFC = () => {
           )}
         </div>
         <div className="mt-4">
-          <Button>送信</Button>
+          <Button className="w-full">送信</Button>
         </div>
         <Maybe
           link={{

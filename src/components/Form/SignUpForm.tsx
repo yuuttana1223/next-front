@@ -104,7 +104,7 @@ export const SignUpForm: VFC = () => {
           )}
         </div>
         <div className="mt-4">
-          <Button>登録</Button>
+          <Button className="w-full">登録</Button>
         </div>
         <Maybe
           link={{
