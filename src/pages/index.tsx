@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { ReviewList } from "src/components/Review/ReviewList";
+import { Reviews } from "src/components/Review/Reviews";
 import { AppLayout } from "src/layouts/AppLayout";
 
 const Home: NextPage = () => {
@@ -11,7 +11,7 @@ const Home: NextPage = () => {
         <meta name="description" content="授業評価一覧" />
       </Head>
       <AppLayout>
-        <ReviewList />
+        <Reviews />
       </AppLayout>
     </>
   );

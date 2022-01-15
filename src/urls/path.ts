@@ -6,5 +6,6 @@ export const PATH = {
   },
   REVIEWS: {
     SHOW: (id?: number) => `/reviews/${id}`,
+    NEW: "/reviews/new",
   },
 };

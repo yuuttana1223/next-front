@@ -5,7 +5,7 @@ type Props = {
   type: string;
   name: string;
   placeholder: string;
-  validation: {
+  validation?: {
     required?: boolean;
     minLength?: number;
     maxLength?: number;
@@ -16,6 +16,7 @@ type Props = {
 export const FloatingLabelInput: VFC<Props> = (props) => {
   const [active, setActive] = useState(false);
   const { register } = useFormContext();
+
   return (
     <div className="mt-4">
       <div className="relative self-center border">
@@ -23,10 +24,8 @@ export const FloatingLabelInput: VFC<Props> = (props) => {
           {...register(props.name, props.validation)}
           className="w-full p-2 rounded outline-none"
           id={props.name}
-          name={props.name}
           type={props.type}
           onChange={(e) => setActive(!!e.target.value)}
-          required
           autoComplete="on"
         />
         <label
