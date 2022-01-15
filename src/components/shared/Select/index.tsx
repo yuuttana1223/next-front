@@ -27,7 +27,7 @@ export const Select: VFC<Props> = (props) => {
       <div className="relative mt-1">
         <label className="font-semibold text-gray-700">
           {props.labelName}
-          {selected !== "その他" && errors[props.name] && (
+          {selected === "" && errors[props.name] && (
             <div className="mb-1">
               <ErrorMessage message="選択されていません" />
             </div>

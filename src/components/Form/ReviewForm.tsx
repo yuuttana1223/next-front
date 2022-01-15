@@ -1,4 +1,4 @@
-import { VFC } from "react";
+import { VFC, useContext } from "react";
 import { useAllReviews } from "src/hooks/useAllReviews";
 import { Select } from "src/components/shared/Select";
 import { RadioButton } from "src/components/shared/Radio/RadioButton";
@@ -6,16 +6,32 @@ import { Textarea } from "src/components/shared/Textarea";
 import { Button } from "src/components/shared/Button";
 import { FormProvider, useForm, SubmitHandler } from "react-hook-form";
 import { Review } from "src/types/review";
+import { AuthContext } from "src/providers/AuthProvider";
+import { postReview } from "src/apis/review";
+import { useRouter } from "next/router";
+import { PATH } from "src/urls/path";
+import { useSWRConfig } from "swr";
+import { API_URL } from "src/urls/api";
 
-export type FormValues = Omit<
-  Review,
-  "id" | "user_id" | "created_at" | "updated_at"
->;
+export type FormValues = Omit<Review, "id" | "created_at" | "updated_at"> & {
+  lecture_name2?: string;
+  teacher_name2?: string;
+};
 
 export const ReviewForm: VFC = () => {
-  const { reviews } = useAllReviews();
+  const {
+    authState: { currentUser },
+  } = useContext(AuthContext);
+  const { lectures, teachers } = useAllReviews();
   const methods = useForm<FormValues>();
-  const onSubmit: SubmitHandler<FormValues> = (data) => console.log(data);
+  const router = useRouter();
+  const { mutate } = useSWRConfig();
+  const onSubmit: SubmitHandler<FormValues> = (params) => {
+    postReview(params, currentUser?.id).then((res) => {
+      mutate(`${API_URL}/reviews`);
+      router.push(PATH.REVIEWS.SHOW(res.data.id));
+    });
+  };
 
   return (
     <FormProvider {...methods}>
@@ -27,7 +43,7 @@ export const ReviewForm: VFC = () => {
               name="lecture_name"
               validation={{ required: true, minLength: 2, maxLength: 25 }}
               labelName="講義名"
-              texts={reviews?.map((review) => review.lecture_name)}
+              texts={lectures}
               isOther
             />
 
@@ -35,7 +51,7 @@ export const ReviewForm: VFC = () => {
               name="teacher_name"
               validation={{ required: true, minLength: 2, maxLength: 25 }}
               labelName="担当教員"
-              texts={reviews?.map((review) => review.teacher_name)}
+              texts={teachers}
               isOther
             />
             <RadioButton
