@@ -15,8 +15,8 @@ export const Reviews: VFC = () => {
   }
 
   return (
-    <div>
-      <div className="flex justify-end mb-10">
+    <div className="">
+      <div className="fixed right-6 bottom-6 md:right-10 md:bottom-10">
         <NewButtonLink />
       </div>
       <div className="flex flex-wrap -m-4">
