@@ -68,25 +68,25 @@ export const ReviewItem: VFC<Props> = (props) => {
               />
               <span className="ml-1 align-bottom">コメント数: 2</span>
             </div>
+            <div className="flex mt-2 text-center">
+              <button className="rounded-full cursor-pointer">
+                <HiHeart
+                  title="いいねボタン"
+                  size="24px"
+                  className="text-gray-400"
+                />
+                <span className="text-xs">2</span>
+              </button>
+              <button className="p-2 ml-auto border-2 shadow cursor-pointer">
+                <HiBookmark
+                  title="お気に入りボタン"
+                  size="24px"
+                  className="inline text-pink-300"
+                />
+                <span className="align-bottom">ブックマーク</span>
+              </button>
+            </div>
           </div>
-        </div>
-        <div className="flex mt-1 text-center">
-          <button className="rounded-full cursor-pointer">
-            <HiHeart
-              title="いいねボタン"
-              size="24px"
-              className="text-gray-400"
-            />
-            <span className="text-xs">2</span>
-          </button>
-          <button className="p-2 ml-auto border-2 cursor-pointer ">
-            <HiBookmark
-              title="お気に入りボタン"
-              size="24px"
-              className="inline text-pink-300"
-            />
-            <span className="align-bottom">お気に入りに追加</span>
-          </button>
         </div>
       </div>
     </div>
