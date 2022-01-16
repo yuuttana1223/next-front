@@ -1,27 +1,18 @@
 import { VFC } from "react";
 import { BackLink } from "src/components/shared/Link/BackLink";
-import { API_URL } from "src/urls/api";
 import { PATH } from "src/urls/path";
-import { fetcher } from "src/utils/fetcher";
-import { useRouter } from "next/router";
-import useSWRImmutable from "swr/immutable";
-import { Review as ReviewType } from "src/types/review";
 import { ReviewItem } from "src/components/Review/ReviewItem";
+import { useReview } from "src/hooks/useReview";
 
 export const Review: VFC = () => {
-  const router = useRouter();
+  const { review, loading, reviewError } = useReview();
 
-  const { data: review, error } = useSWRImmutable<ReviewType, Error>(
-    router.query.id ? `${API_URL}/reviews/${router.query.id}` : null,
-    fetcher
-  );
-
-  if (!review && !error) {
+  if (loading) {
     return <div>ローディング中</div>;
   }
 
-  if (error) {
-    return <div>{error.message}</div>;
+  if (reviewError) {
+    return <div>{reviewError.message}</div>;
   }
 
   return (
@@ -30,7 +21,7 @@ export const Review: VFC = () => {
         <BackLink href={PATH.ROOT} />
       </div>
       <div className="flex justify-center -m-4">
-        <ReviewItem review={review} />
+        <ReviewItem review={review} isEditPage />
       </div>
     </div>
   );
