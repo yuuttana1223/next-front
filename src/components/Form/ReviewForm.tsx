@@ -7,7 +7,7 @@ import { Button } from "src/components/shared/Button";
 import { FormProvider, useForm, SubmitHandler } from "react-hook-form";
 import { Review } from "src/types/review";
 import { AuthContext } from "src/providers/AuthProvider";
-import { postReview } from "src/apis/review";
+import { patchReview, postReview } from "src/apis/review";
 import { useRouter } from "next/router";
 import { PATH } from "src/urls/path";
 import { useSWRConfig } from "swr";
@@ -18,7 +18,11 @@ export type FormValues = Omit<Review, "id" | "created_at" | "updated_at"> & {
   teacher_name2?: string;
 };
 
-export const ReviewForm: VFC = () => {
+type Props = {
+  review?: Review;
+};
+
+export const ReviewForm: VFC<Props> = (props) => {
   const {
     authState: { currentUser },
   } = useContext(AuthContext);
@@ -27,10 +31,18 @@ export const ReviewForm: VFC = () => {
   const router = useRouter();
   const { mutate } = useSWRConfig();
   const onSubmit: SubmitHandler<FormValues> = (params) => {
-    postReview(params, currentUser?.id).then((res) => {
-      mutate(`${API_URL}/reviews`);
-      router.push(PATH.REVIEWS.SHOW(res.data.id));
-    });
+    if (props.review) {
+      patchReview(params, props.review.id).then((res) => {
+        mutate(`${API_URL}/reviews/${res.data.id}`, res.data);
+        mutate(`${API_URL}/reviews`);
+        router.push(PATH.REVIEWS.SHOW(res.data.id));
+      });
+    } else {
+      postReview(params, currentUser?.id).then((res) => {
+        mutate(`${API_URL}/reviews`);
+        router.push(PATH.REVIEWS.SHOW(res.data.id));
+      });
+    }
   };
 
   return (
@@ -44,6 +56,7 @@ export const ReviewForm: VFC = () => {
               validation={{ required: true, minLength: 2, maxLength: 25 }}
               labelName="講義名"
               texts={lectures}
+              selected={props.review?.lecture_name}
               isOther
             />
 
@@ -52,6 +65,7 @@ export const ReviewForm: VFC = () => {
               validation={{ required: true, minLength: 2, maxLength: 25 }}
               labelName="担当教員"
               texts={teachers}
+              selected={props.review?.teacher_name}
               isOther
             />
             <RadioButton
@@ -63,26 +77,38 @@ export const ReviewForm: VFC = () => {
                 "オンデマンド",
                 "ハイブリッド",
               ]}
+              selected={props.review?.lesson_type}
             />
             <RadioButton
               name="adequacy"
               title="内容充実度"
               texts={["満足", "やや満足", "普通", "やや不満", "不満"]}
+              selected={props.review?.adequacy}
             />
             <RadioButton
               name="submission_quantity"
               title="課題の量"
               texts={["多い", "やや多い", "普通", "やや少ない", "少ない"]}
+              selected={props.review?.submission_quantity}
             />
             <RadioButton
               name="difficulty"
               title="難易度"
               texts={["難しい", "やや難しい", "普通", "やや易しい", "易しい"]}
+              selected={props.review?.difficulty}
             />
             <RadioButton
               name="is_ending_test"
               title="期末テスト"
               texts={["あり", "なし"]}
+              selected={
+                // 新規投稿のときはundefined, 編集のときは「"あり"」か「"なし"」
+                props.review?.is_ending_test
+                  ? "あり"
+                  : props.review?.is_ending_test === undefined
+                  ? undefined
+                  : "なし"
+              }
             />
             <Textarea
               name="content"
@@ -90,6 +116,7 @@ export const ReviewForm: VFC = () => {
               rows={5}
               placeholder="授業の感想などを書いてください"
               validation={{ required: true, maxLength: 500 }}
+              selected={props.review?.content}
             />
             <Button className="w-20 ml-auto">送信</Button>
           </div>

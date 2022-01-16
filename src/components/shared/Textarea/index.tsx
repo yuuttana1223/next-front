@@ -1,4 +1,4 @@
-import { VFC, useState } from "react";
+import { VFC, useState, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { ErrorMessage } from "src/components/Message/ErrorMessage";
 
@@ -7,6 +7,7 @@ type Props = {
   rows?: number;
   placeholder?: string;
   name: string;
+  selected?: string;
   validation: {
     maxLength: number;
     required?: boolean;
@@ -14,8 +15,17 @@ type Props = {
 };
 
 export const Textarea: VFC<Props> = (props) => {
-  const { register } = useFormContext();
-  const [count, setCount] = useState(0);
+  const {
+    register,
+    setValue,
+    formState: { errors },
+  } = useFormContext();
+  const [count, setCount] = useState<number>(0);
+
+  useEffect(() => {
+    setCount(props.selected?.length ?? 0);
+    setValue(props.name, props.selected);
+  }, [setValue, props.name, props.selected]);
 
   return (
     <label className="block">
@@ -23,15 +33,19 @@ export const Textarea: VFC<Props> = (props) => {
       {count}/{props.validation?.maxLength})
       {count > props.validation.maxLength && (
         <ErrorMessage
-          message={`${props.validation.maxLength}字以内で入力してください`}
+          message={`1文字以上${props.validation.maxLength}字以内で入力してください`}
+        />
+      )}
+      {errors[props.name] && (
+        <ErrorMessage
+          message={`1文字以上${props.validation.maxLength}字以内で入力してください`}
         />
       )}
       <textarea
-        className={`block w-full p-2 mt-1 border-2 outline-none ${
+        className={`shadow block w-full p-2 mt-1 border-2 outline-none ${
           count > props.validation.maxLength && "border-red-400"
         }`}
         rows={props.rows}
-        required
         placeholder={props.placeholder}
         {...register(props.name, props.validation)}
         onChange={(e) => setCount(e.target.value.length)}

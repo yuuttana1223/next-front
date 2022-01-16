@@ -1,4 +1,4 @@
-import { VFC, useState } from "react";
+import { VFC, useState, useEffect } from "react";
 import { OtherInput } from "src/components/shared/Input/OtherInput";
 import { useFormContext } from "react-hook-form";
 import { ErrorMessage } from "src/components/Message/ErrorMessage";
@@ -8,6 +8,7 @@ type Props = {
   texts?: string[];
   labelName: string;
   isOther?: boolean;
+  selected?: string;
   validation?: {
     required?: boolean;
     minLength?: number;
@@ -20,7 +21,12 @@ export const Select: VFC<Props> = (props) => {
   const {
     register,
     formState: { errors },
+    setValue,
   } = useFormContext();
+
+  useEffect(() => {
+    setValue(props.name, props.selected);
+  }, [props.name, props.selected, setValue]);
 
   return (
     <div>
@@ -38,9 +44,12 @@ export const Select: VFC<Props> = (props) => {
           className="relative w-full px-2 py-3 text-left bg-white rounded-lg shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-white focus-visible:ring-offset-blue-300 focus-visible:ring-offset-2 focus-visible:border-blue-500 sm:text-sm"
           onChange={(e) => setSelected(e.target.value)}
         >
-          <option hidden value="">
-            選択してください
-          </option>
+          {!props.selected && (
+            <option hidden value="">
+              選択してください
+            </option>
+          )}
+
           {props.texts?.map((text) => (
             <option key={text} value={text} className="block truncate">
               {text}
