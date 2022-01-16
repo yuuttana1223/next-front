@@ -1,4 +1,4 @@
-import { VFC } from "react";
+import { VFC, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { ErrorMessage } from "src/components/Message/ErrorMessage";
 
@@ -6,13 +6,19 @@ type Props = {
   title: string;
   texts: string[];
   name: string;
+  selected?: string;
 };
 
 export const RadioButton: VFC<Props> = (props) => {
   const {
     register,
     formState: { errors },
+    setValue,
   } = useFormContext();
+
+  useEffect(() => {
+    setValue(props.name, props.selected);
+  }, [props.name, props.selected, setValue]);
 
   return (
     <div className="block">

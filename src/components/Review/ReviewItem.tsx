@@ -5,9 +5,12 @@ import { HiHeart, HiBookmark, HiOutlineChat } from "react-icons/hi";
 import { AuthContext } from "src/providers/AuthProvider";
 import Link from "next/link";
 import { PATH } from "src/urls/path";
+import { DeleteButton } from "src/components/shared/Button/DeleteButton";
+import { EditButton } from "src/components/shared/Button/EditButton";
 
 type Props = {
   review?: Review;
+  isEditPage?: boolean;
 };
 
 export const ReviewItem: VFC<Props> = (props) => {
@@ -21,12 +24,15 @@ export const ReviewItem: VFC<Props> = (props) => {
             <h2 className="pb-1 mb-3 text-lg text-gray-900 border-b-2">
               <Link href={`${PATH.REVIEWS.SHOW(props.review?.id)}`}>
                 <a className="inline-block font-bold text-blue-500 hover:text-blue-700">
-                  {props.review?.lecture_name} ({props.review?.teacher_name}
-                  先生)
+                  {props.review?.lecture_name}
                 </a>
               </Link>
             </h2>
             <div className="p-3 mb-3 -mx-3 leading-relaxed rounded-lg shadow">
+              <p>
+                <span className="mr-1 font-semibold">担当教員:</span>
+                {props.review?.teacher_name}
+              </p>
               <p>
                 <span className="mr-1 font-semibold">内容充実度:</span>
                 {props.review?.adequacy}
@@ -48,10 +54,14 @@ export const ReviewItem: VFC<Props> = (props) => {
                 {props.review?.lesson_type}
               </p>
             </div>
-            <div className="p-3 mb-3 -mx-3 leading-relaxed rounded-lg shadow ">
-              <p className="font-semibold">内容:</p>
+            <div
+              className={`p-3 mb-3 -mx-3 leading-relaxed rounded-lg shadow ${
+                props.isEditPage ? "break-words" : "truncate"
+              }`}
+            >
+              <p className="font-semibold ">内容:</p>
               {authState.isSignedIn ? (
-                <div>{props.review?.content}</div>
+                <span>{props.review?.content}</span>
               ) : (
                 <div className="text-center">
                   <Link href={PATH.USERS.SIGN_IN}>
@@ -60,15 +70,8 @@ export const ReviewItem: VFC<Props> = (props) => {
                 </div>
               )}
             </div>
-            <div className="text-sm text-right text-gray-400">
-              <HiOutlineChat
-                title="コメント数"
-                size="24px"
-                className="inline"
-              />
-              <span className="ml-1 align-bottom">コメント数: 2</span>
-            </div>
-            <div className="flex mt-2 text-center">
+
+            <div className="flex my-2 text-center">
               <button className="rounded-full cursor-pointer">
                 <HiHeart
                   title="いいねボタン"
@@ -85,6 +88,22 @@ export const ReviewItem: VFC<Props> = (props) => {
                 />
                 <span className="align-bottom">ブックマーク</span>
               </button>
+            </div>
+            {props.isEditPage &&
+              authState.currentUser?.id === props.review?.user_id && (
+                <div className="my-2 space-x-2">
+                  <EditButton href={PATH.REVIEWS.EDIT(props.review?.id)} />
+                  <DeleteButton />
+                </div>
+              )}
+
+            <div className="text-sm text-right text-gray-400">
+              <HiOutlineChat
+                title="コメント数"
+                size="24px"
+                className="inline"
+              />
+              <span className="ml-1 align-bottom">コメント数: 2</span>
             </div>
           </div>
         </div>
