@@ -33,3 +33,7 @@ export const patchReview = (params: FormValues, reviewId?: number) => {
     },
   });
 };
+
+export const deleteReview = (reviewId?: number) => {
+  return axios.delete<Review>(`${API_URL}/reviews/${reviewId}`);
+};
