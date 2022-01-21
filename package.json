@@ -8,9 +8,6 @@
     "lint": "next lint",
     "prepare": "husky install"
   },
-  "lint-staged": {
-    "*.{ts,tsx}": "lint --max-warnings=0 --file"
-  },
   "dependencies": {
     "@headlessui/react": "^1.4.3",
     "axios": "^0.24.0",
