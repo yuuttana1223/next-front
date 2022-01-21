@@ -26,7 +26,7 @@ export const ReviewForm: VFC<Props> = (props) => {
   const {
     authState: { currentUser },
   } = useContext(AuthContext);
-  const { lectures, teachers } = useAllReviews();
+  const { reviews, lectures, teachers } = useAllReviews();
   const methods = useForm<FormValues>();
   const router = useRouter();
   const { mutate } = useSWRConfig();
@@ -34,12 +34,17 @@ export const ReviewForm: VFC<Props> = (props) => {
     if (props.review) {
       patchReview(params, props.review.id).then((res) => {
         mutate(`${API_URL}/reviews/${res.data.id}`, res.data);
-        mutate(`${API_URL}/reviews`);
+        mutate(
+          `${API_URL}/reviews`,
+          reviews?.map((review) =>
+            review.id === res.data.id ? res.data : review
+          )
+        );
         router.push(PATH.REVIEWS.SHOW(res.data.id));
       });
     } else {
       postReview(params, currentUser?.id).then((res) => {
-        mutate(`${API_URL}/reviews`);
+        mutate(`${API_URL}/reviews`, [{ ...reviews }, res.data]);
         router.push(PATH.REVIEWS.SHOW(res.data.id));
       });
     }
@@ -48,7 +53,9 @@ export const ReviewForm: VFC<Props> = (props) => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
-        <h2 className="text-2xl font-bold text-center">レビュー投稿</h2>
+        <h2 className="text-2xl font-bold text-center">
+          {props.review ? "レビュー編集" : "レビュー投稿"}
+        </h2>
         <div className="max-w-md mx-auto mt-8">
           <div className="grid grid-cols-1 gap-6">
             <Select

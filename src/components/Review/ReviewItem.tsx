@@ -1,12 +1,18 @@
-import { VFC, useContext } from "react";
+import { VFC, useContext, useState, useCallback } from "react";
 import { Review } from "src/types/review";
 
 import { HiHeart, HiBookmark, HiOutlineChat } from "react-icons/hi";
 import { AuthContext } from "src/providers/AuthProvider";
 import Link from "next/link";
 import { PATH } from "src/urls/path";
-import { DeleteButton } from "src/components/shared/Button/DeleteButton";
 import { EditButton } from "src/components/shared/Button/EditButton";
+import { DeleteButton } from "src/components/shared/Button/DeleteButton";
+import { DeleteModal } from "src/components/Modal/DeleteModal";
+import { deleteReview } from "src/apis/review";
+import { useRouter } from "next/router";
+import { useSWRConfig } from "swr";
+import { API_URL } from "src/urls/api";
+import { useAllReviews } from "src/hooks/useAllReviews";
 
 type Props = {
   review?: Review;
@@ -15,7 +21,30 @@ type Props = {
 
 export const ReviewItem: VFC<Props> = (props) => {
   const { authState } = useContext(AuthContext);
+  const [isOpen, setIsOpen] = useState(false);
+  const { reviews } = useAllReviews();
 
+  const closeModal = useCallback(() => {
+    setIsOpen(false);
+  }, [setIsOpen]);
+
+  const openModal = useCallback(() => {
+    setIsOpen(true);
+  }, [setIsOpen]);
+
+  const router = useRouter();
+  const { mutate } = useSWRConfig();
+
+  const handleDelete = () => {
+    return deleteReview(props.review?.id).then(() => {
+      mutate(
+        `${API_URL}/reviews`,
+        reviews?.filter((review) => review.id !== props.review?.id)
+      );
+      mutate(`${API_URL}/reviews/${props.review?.id}`);
+      router.push(PATH.ROOT);
+    });
+  };
   return (
     <div className="w-full p-4 md:w-1/2 lg:w-1/3">
       <div>
@@ -93,7 +122,12 @@ export const ReviewItem: VFC<Props> = (props) => {
               authState.currentUser?.id === props.review?.user_id && (
                 <div className="my-2 space-x-2">
                   <EditButton href={PATH.REVIEWS.EDIT(props.review?.id)} />
-                  <DeleteButton />
+                  <DeleteButton onClick={openModal} />
+                  <DeleteModal
+                    closeModal={closeModal}
+                    isOpen={isOpen}
+                    handleDelete={handleDelete}
+                  />
                 </div>
               )}
 
