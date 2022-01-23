@@ -2,12 +2,13 @@ import { VFC } from "react";
 import { ReviewItem } from "src/components/Review/ReviewItem";
 import { NewButtonLink } from "src/components/shared/Link/NewButtonLink";
 import { useAllReviews } from "src/hooks/useAllReviews";
+import { Loader } from "src/components/Loader";
 
 export const Reviews: VFC = () => {
   const { reviews, reviewsError, loading } = useAllReviews();
 
   if (loading) {
-    return <div>ローディング中</div>;
+    return <Loader />;
   }
 
   if (reviewsError) {
