@@ -16,14 +16,12 @@ const fetcher = (url: string) => {
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
-    <>
-      <AuthProvider>
+    <AuthProvider>
       <SWRConfig value={{ fetcher }}>
         <Component {...pageProps} />
       </SWRConfig>
       <Toaster />
-      </AuthProvider>
-    </>
+    </AuthProvider>
   );
 };
 
