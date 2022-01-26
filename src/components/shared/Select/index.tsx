@@ -51,7 +51,8 @@ export const Select: VFC<Props> = (props) => {
           )}
 
           {props.texts?.map((text) => (
-            <option key={text} value={text} className="block truncate">
+            // ??はkeyが新規投稿時[undefined, 'プロ演23']でkeyエラーなるのを回避するため
+            <option key={text ?? ""} value={text} className="block truncate">
               {text}
             </option>
           ))}

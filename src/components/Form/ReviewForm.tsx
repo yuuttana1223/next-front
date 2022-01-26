@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import { PATH } from "src/urls/path";
 import { useSWRConfig } from "swr";
 import { API_URL } from "src/urls/api";
+import toast from "react-hot-toast";
 
 export type FormValues = Omit<Review, "id" | "created_at" | "updated_at"> & {
   lecture_name2?: string;
@@ -23,30 +24,42 @@ type Props = {
 };
 
 export const ReviewForm: VFC<Props> = (props) => {
-  const {
-    authState: { currentUser },
-  } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
   const { reviews, lectures, teachers } = useAllReviews();
   const methods = useForm<FormValues>();
   const router = useRouter();
   const { mutate } = useSWRConfig();
   const onSubmit: SubmitHandler<FormValues> = (params) => {
     if (props.review) {
-      patchReview(params, props.review.id).then((res) => {
-        mutate(`${API_URL}/reviews/${res.data.id}`, res.data);
-        mutate(
-          `${API_URL}/reviews`,
-          reviews?.map((review) =>
-            review.id === res.data.id ? res.data : review
-          )
-        );
-        router.push(PATH.REVIEWS.SHOW(res.data.id));
-      });
+      patchReview(params, props.review.id)
+        .then((res) => {
+          mutate(`${API_URL}/reviews/${res.data.id}`, res.data);
+          mutate(
+            `${API_URL}/reviews`,
+            reviews?.map((review) =>
+              review.id === res.data.id ? res.data : review
+            )
+          );
+          toast.success("レビューを更新しました", {
+            duration: 10000,
+          });
+          router.push(PATH.REVIEWS.SHOW(res.data.id));
+        })
+        .catch(() => {
+          toast.error("レビュー編集に失敗しました");
+        });
     } else {
-      postReview(params, currentUser?.id).then((res) => {
-        mutate(`${API_URL}/reviews`, [{ ...reviews }, res.data]);
-        router.push(PATH.REVIEWS.SHOW(res.data.id));
-      });
+      postReview(params, currentUser?.id)
+        .then((res) => {
+          mutate(`${API_URL}/reviews`, [{ ...reviews }, res.data]);
+          toast.success("レビューを作成しました", {
+            duration: 10000,
+          });
+          router.push(PATH.REVIEWS.SHOW(res.data.id));
+        })
+        .catch(() => {
+          toast.error("レビュー作成に失敗しました");
+        });
     }
   };
 

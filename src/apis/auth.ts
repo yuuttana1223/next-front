@@ -13,13 +13,17 @@ type SignUpParams = {
 export type SignInParams = Pick<SignUpParams, "email" | "password">;
 
 type CurrentUser = {
-  is_login: boolean;
   user?: User;
   message?: string;
 };
 
+type Response = {
+  data: User;
+  status: string;
+};
+
 export const signUp = (params: SignUpParams) => {
-  return axios.post<SignUpParams>(`${API_URL}/auth`, {
+  return axios.post<Response>(`${API_URL}/auth`, {
     name: params.name,
     email: params.email,
     password: params.password,
@@ -28,7 +32,7 @@ export const signUp = (params: SignUpParams) => {
 };
 
 export const signIn = (params: SignInParams) => {
-  return axios.post<SignInParams>(`${API_URL}/auth/sign_in`, {
+  return axios.post<Response>(`${API_URL}/auth/sign_in`, {
     email: params.email,
     password: params.password,
   });

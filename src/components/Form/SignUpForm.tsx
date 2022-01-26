@@ -10,7 +10,7 @@ import { signUp } from "src/apis/auth";
 import Cookies from "js-cookie";
 import { AuthContext } from "src/providers/AuthProvider";
 import { useRouter } from "next/router";
-import { AxiosError } from "axios";
+import toast from "react-hot-toast";
 
 type Inputs = {
   name: string;
@@ -20,10 +20,11 @@ type Inputs = {
 };
 
 export const SignUpForm: VFC = () => {
-  const { setAuthState } = useContext(AuthContext);
+  const { setCurrentUser } = useContext(AuthContext);
   const router = useRouter();
 
   const methods = useForm<Inputs>();
+
   const onSubmit: SubmitHandler<Inputs> = (params) => {
     signUp(params)
       .then((res) => {
@@ -31,20 +32,17 @@ export const SignUpForm: VFC = () => {
           Cookies.set("access_token", res.headers["access-token"]);
           Cookies.set("client", res.headers["client"]);
           Cookies.set("uid", res.headers["uid"]);
-          setAuthState((prevAuthState) => {
-            return {
-              ...prevAuthState,
-              isSignedIn: true,
-              currenUser: res.data,
-            };
+          toast.success("ユーザー登録が完了しました", {
+            duration: 10000,
           });
+          setCurrentUser(res.data.data);
           router.push(PATH.ROOT);
         } else {
-          console.log("登録できませんでした。");
+          toast.error("ユーザー登録に失敗しました");
         }
       })
-      .catch((error: AxiosError) => {
-        console.error(error);
+      .catch(() => {
+        toast.error("ユーザー登録に失敗しました");
       });
   };
 
@@ -57,7 +55,7 @@ export const SignUpForm: VFC = () => {
             type="name"
             name="name"
             placeholder="名前"
-            validation={{ minLength: 2, maxLength: 20 }}
+            validation={{ required: true, minLength: 2, maxLength: 20 }}
           />
           {methods.formState.errors.name && (
             <ErrorMessage message="2以上20以下の文字を入力してください" />
@@ -70,6 +68,7 @@ export const SignUpForm: VFC = () => {
             placeholder="メールアドレス"
             validation={{
               pattern: reg,
+              required: true,
             }}
           />
           {methods.formState.errors.email && (
@@ -81,7 +80,7 @@ export const SignUpForm: VFC = () => {
             type="password"
             name="password"
             placeholder="パスワード"
-            validation={{ minLength: 8, maxLength: 25 }}
+            validation={{ required: true, minLength: 8, maxLength: 25 }}
           />
           <p className="my-2 text-xs text-gray-400">
             8桁以上25桁以下の英数字を入力してください
@@ -96,7 +95,7 @@ export const SignUpForm: VFC = () => {
             type="password"
             name="password_confirmation"
             placeholder="パスワード確認"
-            validation={{ minLength: 8, maxLength: 25 }}
+            validation={{ required: true, minLength: 8, maxLength: 25 }}
           />
           {methods.control._formValues["password"] !==
             methods.control._formValues["password_confirmation"] && (

@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import { useSWRConfig } from "swr";
 import { API_URL } from "src/urls/api";
 import { useAllReviews } from "src/hooks/useAllReviews";
+import toast from "react-hot-toast";
 
 type Props = {
   review?: Review;
@@ -20,7 +21,7 @@ type Props = {
 };
 
 export const ReviewItem: VFC<Props> = (props) => {
-  const { authState } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
   const { reviews } = useAllReviews();
 
@@ -36,14 +37,21 @@ export const ReviewItem: VFC<Props> = (props) => {
   const { mutate } = useSWRConfig();
 
   const handleDelete = () => {
-    return deleteReview(props.review?.id).then(() => {
-      mutate(
-        `${API_URL}/reviews`,
-        reviews?.filter((review) => review.id !== props.review?.id)
-      );
-      mutate(`${API_URL}/reviews/${props.review?.id}`);
-      router.push(PATH.ROOT);
-    });
+    return deleteReview(props.review?.id)
+      .then(() => {
+        mutate(
+          `${API_URL}/reviews`,
+          reviews?.filter((review) => review.id !== props.review?.id)
+        );
+        mutate(`${API_URL}/reviews/${props.review?.id}`);
+        toast.success("レビューを削除しました", {
+          duration: 10000,
+        });
+        router.push(PATH.ROOT);
+      })
+      .catch(() => {
+        toast.error("レビュー削除に失敗しました");
+      });
   };
   return (
     <div className="w-full p-4 md:w-1/2 lg:w-1/3">
@@ -89,13 +97,21 @@ export const ReviewItem: VFC<Props> = (props) => {
               }`}
             >
               <p className="font-semibold ">内容:</p>
-              {authState.isSignedIn ? (
+              {currentUser ? (
                 <span>{props.review?.content}</span>
               ) : (
-                <div className="text-center">
-                  <Link href={PATH.USERS.SIGN_IN}>
-                    <a className="cursor-pointer">続きを見る</a>
-                  </Link>
+                <div>
+                  <span>
+                    {props.review?.content.substring(0, 20)}
+                    {props.review?.content.length &&
+                      props.review?.content.length > 20 &&
+                      "..."}
+                  </span>
+                  <div className="text-center">
+                    <Link href={PATH.USERS.SIGN_IN}>
+                      <a className="cursor-pointer">続きを見る</a>
+                    </Link>
+                  </div>
                 </div>
               )}
             </div>
@@ -118,18 +134,17 @@ export const ReviewItem: VFC<Props> = (props) => {
                 <span className="align-bottom">ブックマーク</span>
               </button>
             </div>
-            {props.isEditPage &&
-              authState.currentUser?.id === props.review?.user_id && (
-                <div className="my-2 space-x-2">
-                  <EditButton href={PATH.REVIEWS.EDIT(props.review?.id)} />
-                  <DeleteButton onClick={openModal} />
-                  <DeleteModal
-                    closeModal={closeModal}
-                    isOpen={isOpen}
-                    handleDelete={handleDelete}
-                  />
-                </div>
-              )}
+            {props.isEditPage && currentUser?.id === props.review?.user_id && (
+              <div className="my-2 space-x-2">
+                <EditButton href={PATH.REVIEWS.EDIT(props.review?.id)} />
+                <DeleteButton onClick={openModal} />
+                <DeleteModal
+                  closeModal={closeModal}
+                  isOpen={isOpen}
+                  handleDelete={handleDelete}
+                />
+              </div>
+            )}
 
             <div className="text-sm text-right text-gray-400">
               <HiOutlineChat

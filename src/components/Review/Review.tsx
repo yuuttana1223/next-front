@@ -2,6 +2,7 @@ import { VFC } from "react";
 import { ReviewItem } from "src/components/Review/ReviewItem";
 import { useReview } from "src/hooks/useReview";
 import { Loader } from "src/components/Loader";
+import { ErrorMessage } from "src/components/Message/ErrorMessage";
 
 export const Review: VFC = () => {
   const { review, loading, reviewError } = useReview();
@@ -11,7 +12,7 @@ export const Review: VFC = () => {
   }
 
   if (reviewError) {
-    return <div>{reviewError.message}</div>;
+    return <ErrorMessage message={reviewError.message} className="text-xl" />;
   }
 
   return (
