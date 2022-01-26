@@ -2,20 +2,22 @@ import { VFC } from "react";
 import { ReviewItem } from "src/components/Review/ReviewItem";
 import { NewButtonLink } from "src/components/shared/Link/NewButtonLink";
 import { useAllReviews } from "src/hooks/useAllReviews";
+import { Loader } from "src/components/Loader";
+import { ErrorMessage } from "../Message/ErrorMessage";
 
 export const Reviews: VFC = () => {
   const { reviews, reviewsError, loading } = useAllReviews();
 
   if (loading) {
-    return <div>ローディング中</div>;
+    return <Loader />;
   }
 
   if (reviewsError) {
-    return <div>{reviewsError.message}</div>;
+    return <ErrorMessage message={reviewsError.message} className="text-xl" />;
   }
 
   return (
-    <div className="">
+    <div>
       <div className="fixed right-6 bottom-6 md:right-10 md:bottom-10">
         <NewButtonLink />
       </div>

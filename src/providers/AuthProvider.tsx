@@ -5,44 +5,46 @@ import {
   Dispatch,
   SetStateAction,
   useEffect,
+  VFC,
 } from "react";
 import { User } from "src/types/user";
-import { VFC } from "react";
 import { fetchCurrentUser } from "src/apis/auth";
+import { AxiosError } from "axios";
 
 export const AuthContext = createContext(
   {} as {
-    authState: Auth;
-    setAuthState: Dispatch<SetStateAction<Auth>>;
+    currentUser?: User;
+    setCurrentUser: Dispatch<SetStateAction<User | undefined>>;
   }
 );
 
-type Auth = {
-  loading: boolean;
-  isSignedIn: boolean;
-  currentUser?: User;
-};
-
 export const AuthProvider: VFC<{ children: ReactNode }> = (props) => {
-  const [authState, setAuthState] = useState<Auth>({
-    loading: false,
-    isSignedIn: false,
-    currentUser: undefined,
-  });
+  const [currentUser, setCurrentUser] = useState<User | undefined>(undefined);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchCurrentUser()?.then((res) => {
-      setAuthState((prevAuthState) => {
-        return {
-          ...prevAuthState,
-          isSignedIn: res.data.is_login,
-          currentUser: res.data.user,
-        };
-      });
-    });
+    if (fetchCurrentUser() === undefined) {
+      setLoading(false);
+    } else {
+      fetchCurrentUser()
+        ?.then((res) => {
+          setCurrentUser(res.data.user);
+        })
+        .catch((e: AxiosError) => {
+          console.error(e.message);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
   }, []);
+
+  if (loading) {
+    return <></>;
+  }
+
   return (
-    <AuthContext.Provider value={{ authState, setAuthState }}>
+    <AuthContext.Provider value={{ currentUser, setCurrentUser }}>
       {props.children}
     </AuthContext.Provider>
   );

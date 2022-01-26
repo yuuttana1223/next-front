@@ -10,7 +10,7 @@ import { signIn } from "src/apis/auth";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { AuthContext } from "src/providers/AuthProvider";
-import { AxiosError } from "axios";
+import toast from "react-hot-toast";
 
 export type Inputs = {
   email: string;
@@ -18,7 +18,7 @@ export type Inputs = {
 };
 
 export const SignInForm: VFC = () => {
-  const { setAuthState } = useContext(AuthContext);
+  const { setCurrentUser, currentUser } = useContext(AuthContext);
   const router = useRouter();
   const methods = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = (params) => {
@@ -28,20 +28,21 @@ export const SignInForm: VFC = () => {
           Cookies.set("access_token", res.headers["access-token"]);
           Cookies.set("client", res.headers["client"]);
           Cookies.set("uid", res.headers["uid"]);
-          setAuthState((prevAuthState) => {
-            return {
-              ...prevAuthState,
-              isSignedIn: true,
-              currenUser: res.data,
-            };
+          toast.success("ログインに成功しました", {
+            duration: 10000,
           });
+          setCurrentUser(res.data.data);
+          console.log(res.data);
+
+          console.log(currentUser);
+
           router.push(PATH.ROOT);
         } else {
-          console.log("登録できませんでした。");
+          toast.error("ログインに失敗しました");
         }
       })
-      .catch((error: AxiosError) => {
-        console.error(error);
+      .catch(() => {
+        toast.error("ログインに失敗しました");
       });
   };
 
@@ -56,6 +57,7 @@ export const SignInForm: VFC = () => {
             placeholder="メールアドレス"
             validation={{
               pattern: reg,
+              required: true,
             }}
           />
           {methods.formState.errors.email && (
@@ -67,7 +69,7 @@ export const SignInForm: VFC = () => {
             type="password"
             name="password"
             placeholder="パスワード"
-            validation={{ minLength: 8, maxLength: 25 }}
+            validation={{ required: true, minLength: 8, maxLength: 25 }}
           />
           <p className="my-2 text-xs text-gray-400">
             8桁以上25桁以下の英数字を入力してください

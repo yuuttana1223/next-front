@@ -1,28 +1,23 @@
 import { VFC } from "react";
-import { BackLink } from "src/components/shared/Link/BackLink";
-import { PATH } from "src/urls/path";
 import { ReviewItem } from "src/components/Review/ReviewItem";
 import { useReview } from "src/hooks/useReview";
+import { Loader } from "src/components/Loader";
+import { ErrorMessage } from "src/components/Message/ErrorMessage";
 
 export const Review: VFC = () => {
   const { review, loading, reviewError } = useReview();
 
   if (loading) {
-    return <div>ローディング中</div>;
+    return <Loader />;
   }
 
   if (reviewError) {
-    return <div>{reviewError.message}</div>;
+    return <ErrorMessage message={reviewError.message} className="text-xl" />;
   }
 
   return (
-    <div>
-      <div className="mb-16">
-        <BackLink href={PATH.ROOT} />
-      </div>
-      <div className="flex justify-center -m-4">
-        <ReviewItem review={review} isEditPage />
-      </div>
+    <div className="flex justify-center -m-4">
+      <ReviewItem review={review} isEditPage />
     </div>
   );
 };
