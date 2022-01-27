@@ -69,7 +69,7 @@ export const ReviewForm: VFC<Props> = (props) => {
         <h2 className="text-2xl font-bold text-center">
           {props.review ? "レビュー編集" : "レビュー投稿"}
         </h2>
-        <div className="max-w-md mx-auto mt-8">
+        <div className="mx-auto mt-8 max-w-md">
           <div className="grid grid-cols-1 gap-6">
             <Select
               name="lecture_name"
@@ -138,7 +138,7 @@ export const ReviewForm: VFC<Props> = (props) => {
               validation={{ required: true, maxLength: 500 }}
               selected={props.review?.content}
             />
-            <Button className="w-20 ml-auto">送信</Button>
+            <Button className="ml-auto w-20">送信</Button>
           </div>
         </div>
       </form>

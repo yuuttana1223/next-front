@@ -54,9 +54,9 @@ export const ReviewItem: VFC<Props> = (props) => {
       });
   };
   return (
-    <div className="w-full p-4 md:w-1/2 lg:w-1/3">
+    <div className="p-4 w-full md:w-1/2 lg:w-1/3">
       <div>
-        <div className="h-full overflow-hidden border-2 rounded-lg shadow">
+        <div className="overflow-hidden h-full rounded-lg border-2 shadow">
           <div className="p-6">
             <h2 className="pb-1 mb-3 text-lg text-gray-900 border-b-2">
               <Link href={`${PATH.REVIEWS.SHOW(props.review?.id)}`}>
@@ -65,7 +65,7 @@ export const ReviewItem: VFC<Props> = (props) => {
                 </a>
               </Link>
             </h2>
-            <div className="p-3 mb-3 -mx-3 leading-relaxed rounded-lg shadow">
+            <div className="p-3 -mx-3 mb-3 leading-relaxed rounded-lg shadow">
               <p>
                 <span className="mr-1 font-semibold">担当教員:</span>
                 {props.review?.teacher_name}

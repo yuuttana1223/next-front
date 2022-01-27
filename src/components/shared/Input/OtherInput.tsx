@@ -18,7 +18,7 @@ export const OtherInput: VFC<Props> = (props) => {
   } = useFormContext();
 
   return (
-    <label className="space-y-">
+    <label className="space-y-2">
       <span className="font-medium text-gray-600">
         その他の場合のみ入力してください
       </span>
@@ -34,7 +34,7 @@ export const OtherInput: VFC<Props> = (props) => {
         type="text"
         value={selected}
         onChange={(e) => setSelected(e.target.value)}
-        className="w-full p-1 border-2 rounded shadow-sm outline-none"
+        className="p-1 w-full rounded border-2 outline-none shadow-sm"
       />
     </label>
   );

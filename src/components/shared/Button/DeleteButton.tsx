@@ -10,10 +10,10 @@ export const DeleteButton: VFC<Props> = (props) => {
     <>
       <button
         onClick={props.onClick}
-        className="px-3 py-2 font-bold text-white rounded bg-rose-500 hover:bg-rose-600 md:pr-3 md:pl-2"
+        className="py-2 px-3 font-bold text-white bg-rose-500 hover:bg-rose-600 rounded md:pr-3 md:pl-2"
       >
         <HiOutlineTrash title="削除" size="24px" className="inline" />
-        <span className="hidden md:align-bottom md:inline">削除</span>
+        <span className="hidden md:inline md:align-bottom">削除</span>
       </button>
     </>
   );

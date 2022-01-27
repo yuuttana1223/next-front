@@ -14,10 +14,10 @@ export const DeleteModal: VFC<Props> = (props) => {
       <Transition appear show={props.isOpen} as={Fragment}>
         <Dialog
           as="div"
-          className="fixed inset-0 z-10 overflow-y-auto bg-gray-600 bg-opacity-60"
+          className="overflow-y-auto fixed inset-0 z-10 bg-gray-600/60"
           onClose={props.closeModal}
         >
-          <div className="min-h-screen px-4 text-center">
+          <div className="px-4 min-h-screen text-center">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -46,7 +46,7 @@ export const DeleteModal: VFC<Props> = (props) => {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+              <div className="inline-block overflow-hidden p-6 my-8 w-full max-w-md text-left align-middle bg-white rounded-2xl shadow-xl transition-all">
                 <div className="flex justify-end">
                   <button onClick={props.closeModal}>
                     <HiOutlineX title="閉じる" size="20" />
@@ -66,14 +66,14 @@ export const DeleteModal: VFC<Props> = (props) => {
                   <button
                     onClick={props.handleDelete}
                     type="button"
-                    className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
+                    className="inline-flex items-center py-2.5 px-5 mr-2 text-sm font-medium text-center text-white bg-red-600 hover:bg-red-800 rounded-lg focus:ring-4 focus:ring-red-300"
                   >
                     削除します
                   </button>
                   <button
                     onClick={props.closeModal}
                     type="button"
-                    className="px-5 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-300 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600"
+                    className="focus:z-10 py-2 px-5 text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white bg-white hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-lg border border-gray-200 dark:border-gray-500 focus:ring-4 focus:ring-gray-300"
                   >
                     キャンセル
                   </button>

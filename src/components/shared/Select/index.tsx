@@ -41,7 +41,7 @@ export const Select: VFC<Props> = (props) => {
         </label>
         <select
           {...register(props.name, props.validation)}
-          className="relative w-full px-2 py-3 text-left bg-white rounded-lg shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-white focus-visible:ring-offset-blue-300 focus-visible:ring-offset-2 focus-visible:border-blue-500 sm:text-sm"
+          className="relative py-3 px-2 w-full text-left bg-white rounded-lg focus-visible:border-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-blue-300 shadow-md sm:text-sm"
           onChange={(e) => setSelected(e.target.value)}
         >
           {!props.selected && (
