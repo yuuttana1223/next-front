@@ -22,7 +22,7 @@ export const FloatingLabelInput: VFC<Props> = (props) => {
       <div className="relative self-center border">
         <input
           {...register(props.name, props.validation)}
-          className="w-full p-2 rounded outline-none"
+          className="p-2 w-full rounded outline-none"
           id={props.name}
           type={props.type}
           onChange={(e) => setActive(!!e.target.value)}
