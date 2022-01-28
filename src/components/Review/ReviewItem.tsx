@@ -14,6 +14,7 @@ import { useSWRConfig } from "swr";
 import { API_URL } from "src/urls/api";
 import { useAllReviews } from "src/hooks/useAllReviews";
 import toast from "react-hot-toast";
+import { intlFormat } from "date-fns";
 
 type Props = {
   review?: Review;
@@ -24,6 +25,7 @@ export const ReviewItem: VFC<Props> = (props) => {
   const { currentUser } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
   const { reviews } = useAllReviews();
+  const format = intlFormat;
 
   const closeModal = useCallback(() => {
     setIsOpen(false);
@@ -55,12 +57,16 @@ export const ReviewItem: VFC<Props> = (props) => {
   };
   return (
     <div className="p-4 w-full md:w-1/2 lg:w-1/3">
-      <div>
+      <div className="text-gray-900">
         <div className="overflow-hidden h-full rounded-lg border-2 shadow">
           <div className="p-6">
-            <h2 className="pb-1 mb-3 text-lg text-gray-900 border-b-2">
+            <h2 className="pb-1 mb-3 text-lg border-b-2">
               <Link href={`${PATH.REVIEWS.SHOW(props.review?.id)}`}>
-                <a className="inline-block font-bold text-blue-500 hover:text-blue-700">
+                <a
+                  className={`inline-block font-bold ${
+                    props.isEditPage ? "" : "text-blue-500 hover:text-blue-700"
+                  }`}
+                >
                   {props.review?.lecture_name}
                 </a>
               </Link>
@@ -68,6 +74,7 @@ export const ReviewItem: VFC<Props> = (props) => {
             <div className="p-3 -mx-3 mb-3 leading-relaxed rounded-lg shadow">
               <p>
                 <span className="mr-1 font-semibold">担当教員:</span>
+                <br />
                 {props.review?.teacher_name}
               </p>
               <p>
@@ -116,6 +123,23 @@ export const ReviewItem: VFC<Props> = (props) => {
               )}
             </div>
 
+            <div className="space-y-1 text-sm text-gray-700">
+              <time className="">
+                {props.review &&
+                  format(Date.parse(props.review.created_at), {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+              </time>
+              <p>
+                <span className="mr-1 font-semibold text-gray-900">
+                  投稿者:
+                </span>
+                {props.review?.username}
+              </p>
+            </div>
+
             <div className="flex my-2 text-center">
               <button className="rounded-full cursor-pointer">
                 <HiHeart
@@ -147,12 +171,14 @@ export const ReviewItem: VFC<Props> = (props) => {
             )}
 
             <div className="text-sm text-right text-gray-400">
-              <HiOutlineChat
-                title="コメント数"
-                size="24px"
-                className="inline"
-              />
-              <span className="ml-1 align-bottom">コメント数: 2</span>
+              <div>
+                <HiOutlineChat
+                  title="コメント数"
+                  size="24px"
+                  className="inline"
+                />
+                <span className="ml-1 align-bottom">コメント数: 2</span>
+              </div>
             </div>
           </div>
         </div>

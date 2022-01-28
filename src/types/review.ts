@@ -1,6 +1,7 @@
 export type Review = {
   id: number;
   user_id: number;
+  username: string;
   lecture_name: string;
   teacher_name: string;
   lesson_type: string;
