@@ -18,7 +18,7 @@ export type Inputs = {
 };
 
 export const SignInForm: VFC = () => {
-  const { setCurrentUser, currentUser } = useContext(AuthContext);
+  const { setCurrentUser } = useContext(AuthContext);
   const router = useRouter();
   const methods = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = (params) => {
@@ -32,10 +32,6 @@ export const SignInForm: VFC = () => {
             duration: 10000,
           });
           setCurrentUser(res.data.data);
-          console.log(res.data);
-
-          console.log(currentUser);
-
           router.push(PATH.ROOT);
         } else {
           toast.error("ログインに失敗しました");

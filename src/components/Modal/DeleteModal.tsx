@@ -5,7 +5,7 @@ import { HiOutlineX, HiOutlineExclamationCircle } from "react-icons/hi";
 type Props = {
   isOpen?: boolean;
   closeModal: () => void;
-  handleDelete: () => Promise<void>;
+  handleDelete: () => void;
 };
 
 export const DeleteModal: VFC<Props> = (props) => {
@@ -46,7 +46,7 @@ export const DeleteModal: VFC<Props> = (props) => {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <div className="inline-block overflow-hidden p-6 my-8 w-full max-w-md text-left align-middle bg-white rounded-2xl shadow-xl transition-all">
+              <div className="inline-block overflow-hidden relative z-20 p-6 my-8 w-full max-w-md text-left align-middle bg-white rounded-2xl shadow-xl transition-all">
                 <div className="flex justify-end">
                   <button onClick={props.closeModal}>
                     <HiOutlineX title="閉じる" size="20" />

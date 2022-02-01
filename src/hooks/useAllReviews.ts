@@ -1,4 +1,4 @@
-import { Review } from "src/types/review";
+import { Review } from "src/apis/review";
 import { API_URL } from "src/urls/api";
 import useSWRImmutable from "swr/immutable";
 
@@ -10,7 +10,7 @@ export const useAllReviews = () => {
   return {
     reviews,
     reviewsError,
-    loading: !reviews && !reviewsError,
+    reviewsLoading: !reviews && !reviewsError,
     // 重複した講義を削除(講義の種類)
     lectures: reviews
       ?.map((review) => review.lecture_name)

@@ -7,8 +7,7 @@ import {
   useEffect,
   VFC,
 } from "react";
-import { User } from "src/types/user";
-import { fetchCurrentUser } from "src/apis/auth";
+import { User, fetchCurrentUser } from "src/apis/auth";
 import { AxiosError } from "axios";
 
 export const AuthContext = createContext(
