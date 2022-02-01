@@ -1,12 +1,11 @@
-import { VFC, useContext } from "react";
+import { VFC } from "react";
 import { useAllReviews } from "src/hooks/useAllReviews";
 import { Select } from "src/components/shared/Select";
 import { RadioButton } from "src/components/shared/Radio/RadioButton";
 import { Textarea } from "src/components/shared/Textarea";
 import { Button } from "src/components/shared/Button";
 import { FormProvider, useForm, SubmitHandler } from "react-hook-form";
-import { Review } from "src/types/review";
-import { AuthContext } from "src/providers/AuthProvider";
+import { Review } from "src/apis/review";
 import { patchReview, postReview } from "src/apis/review";
 import { useRouter } from "next/router";
 import { PATH } from "src/urls/path";
@@ -24,7 +23,6 @@ type Props = {
 };
 
 export const ReviewForm: VFC<Props> = (props) => {
-  const { currentUser } = useContext(AuthContext);
   const { reviews, lectures, teachers } = useAllReviews();
   const methods = useForm<FormValues>();
   const router = useRouter();
@@ -49,7 +47,7 @@ export const ReviewForm: VFC<Props> = (props) => {
           toast.error("レビュー編集に失敗しました");
         });
     } else {
-      postReview(params, currentUser?.id)
+      postReview(params)
         .then((res) => {
           mutate(`${API_URL}/reviews`, [{ ...reviews }, res.data]);
           toast.success("レビューを作成しました", {

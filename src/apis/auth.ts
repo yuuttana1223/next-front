@@ -1,7 +1,17 @@
 import axios from "axios";
 import { API_URL } from "src/urls/api";
 import Cookies from "js-cookie";
-import { User } from "src/types/user";
+
+export type User = {
+  id: number;
+  uid: string;
+  provider: string;
+  email: string;
+  name: string;
+  allowPasswordChange: boolean;
+  created_at: string;
+  updated_at: string;
+};
 
 type SignUpParams = {
   name: string;
