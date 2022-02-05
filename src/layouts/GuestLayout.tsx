@@ -12,8 +12,8 @@ export const GuestLayout: VFC<{ children: ReactNode }> = (props) => {
       </Header>
       <main>
         <div className="flex flex-col min-h-screen bg-gray-100">
-          <div className="container flex flex-col items-center justify-center flex-1 max-w-sm px-2 mx-auto md:max-w-md">
-            <div className="w-full px-6 py-4 mt-10 text-black bg-white rounded shadow-md md:py-6 md:mt-0">
+          <div className="container flex flex-col flex-1 justify-center items-center px-2 mx-auto max-w-sm md:max-w-md">
+            <div className="py-4 px-6 mt-10 w-full text-black bg-white rounded shadow-md md:py-6 md:mt-0">
               {props.children}
             </div>
           </div>

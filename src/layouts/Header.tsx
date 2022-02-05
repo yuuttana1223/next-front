@@ -3,7 +3,7 @@ import { VFC, ReactNode } from "react";
 export const Header: VFC<{ children: ReactNode }> = (props) => {
   return (
     <header>
-      <nav className="fixed z-10 flex w-full bg-white shadow h-14">
+      <nav className="flex fixed z-10 w-full h-14 bg-white shadow">
         {props.children}
       </nav>
     </header>
