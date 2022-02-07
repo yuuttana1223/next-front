@@ -1,6 +1,6 @@
 import { VFC } from "react";
 type Props = {
-  message: string;
+  message?: string;
   className?: string;
 };
 
