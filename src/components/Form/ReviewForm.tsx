@@ -12,6 +12,8 @@ import { PATH } from "src/urls/path";
 import { useSWRConfig } from "swr";
 import { API_URL } from "src/urls/api";
 import toast from "react-hot-toast";
+import { Loader } from "src/components/Loader";
+import { ErrorMessage } from "src/components/Message/ErrorMessage";
 
 export type FormValues = Omit<Review, "id" | "created_at" | "updated_at"> & {
   lecture_name2?: string;
@@ -23,7 +25,9 @@ type Props = {
 };
 
 export const ReviewForm: VFC<Props> = (props) => {
-  const { reviews, lectures, teachers } = useAllReviews();
+  const { reviews, lectures, teachers, reviewsLoading, reviewsError } =
+    useAllReviews();
+
   const methods = useForm<FormValues>();
   const router = useRouter();
   const { mutate } = useSWRConfig();
@@ -60,6 +64,14 @@ export const ReviewForm: VFC<Props> = (props) => {
         });
     }
   };
+
+  if (reviewsLoading) {
+    return <Loader />;
+  }
+
+  if (reviewsError) {
+    return <ErrorMessage message={reviewsError.message} />;
+  }
 
   return (
     <FormProvider {...methods}>

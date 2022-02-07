@@ -1,0 +1,150 @@
+import {
+  useState,
+  useCallback,
+  VFC,
+  useEffect,
+  Dispatch,
+  SetStateAction,
+} from "react";
+import { useForm } from "react-hook-form";
+import { postComment } from "src/apis/reviewComment";
+import { ErrorMessage } from "src/components/Message/ErrorMessage";
+import toast from "react-hot-toast";
+import { useSWRConfig } from "swr";
+import { API_URL } from "src/urls/api";
+import { useReviewComments } from "src/hooks/useReviewComments";
+import { patchComment } from "src/apis/reviewComment";
+import { CommentState } from "src/components/Review/Review";
+
+type Props = {
+  setReviewComment: Dispatch<SetStateAction<CommentState>>;
+  comment: CommentState;
+  reviewId?: number;
+};
+
+export type CommentValue = {
+  body: string;
+};
+
+export const CommentForm: VFC<Props> = (props) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+    setValue,
+  } = useForm<CommentValue>();
+  const { mutate } = useSWRConfig();
+  const { comments, commentsLoading, commentsError } = useReviewComments(
+    props.reviewId
+  );
+
+  const onSubmit = (params: CommentValue) => {
+    setValue("body", "");
+    if (props.comment.id) {
+      patchComment(params, props.reviewId, props.comment.id)
+        .then((res) => {
+          props.setReviewComment({
+            id: undefined,
+            body: "",
+          });
+          mutate(
+            `${API_URL}/reviews/${props.reviewId}/comments`,
+            comments?.map((comment) =>
+              comment.id === props.comment.id ? res.data : comment
+            )
+          );
+          toast.success("コメントを更新しました");
+        })
+        .catch(() => {
+          toast.error("コメントの更新に失敗しました");
+        });
+    } else {
+      postComment(params, props.reviewId)
+        .then((res) => {
+          mutate(`${API_URL}/reviews/${props.reviewId}/comments`, [
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            ...comments!,
+            res.data,
+          ]);
+          toast.success("コメントを投稿しました");
+        })
+        .catch(() => {
+          toast.error("コメントの投稿に失敗しました");
+        });
+    }
+  };
+
+  const [isFocus, setIsFocus] = useState(false);
+  const handleCancel = useCallback(() => {
+    setIsFocus(false);
+    props.setReviewComment({
+      id: undefined,
+      body: "",
+    });
+    setValue("body", "");
+  }, [props, setValue]);
+
+  useEffect(() => {
+    setValue("body", props.comment.body ?? "");
+  }, [props.comment.body, setValue]);
+
+  if (commentsLoading) {
+    return <></>;
+  }
+
+  if (commentsError) {
+    return <ErrorMessage message={commentsError.message} />;
+  }
+
+  return (
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="group relative z-0 mb-6 w-full"
+    >
+      <input
+        autoComplete="off"
+        type="text"
+        {...register("body", { required: true, maxLength: 500 })}
+        className="peer block py-2 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 focus:border-blue-600 focus:outline-none focus:ring-0 appearance-none"
+        placeholder=" "
+        required
+        onFocus={() => setIsFocus(true)}
+        onBlur={() => setIsFocus(false)}
+      />
+      <label
+        htmlFor="body"
+        className=" absolute top-3 peer-focus:left-0 -z-10 text-sm text-gray-500 peer-focus:text-blue-600 duration-300 scale-75 peer-placeholder-shown:scale-100 peer-focus:scale-75 -translate-y-6 peer-placeholder-shown:translate-y-0 peer-focus:-translate-y-6 origin-[0]"
+      >
+        授業の評価に対するコメント{" "}
+        {errors.body && (
+          <ErrorMessage
+            message="500文字以内で入力してください"
+            className="inline"
+          />
+        )}
+      </label>
+      {(isFocus || watch("body") || props.comment.id) && (
+        <div className="mt-1 text-right">
+          <button
+            type="button"
+            onClick={handleCancel}
+            className="p-2 mr-2 mb-2 text-sm font-medium text-center text-gray-400 hover:bg-gray-100 rounded-sm border border-gray-300 focus:ring-4 focus:ring-blue-300 md:px-3"
+          >
+            キャンセル
+          </button>
+          <button
+            type="submit"
+            disabled={!watch("body")}
+            onClick={handleSubmit(onSubmit)}
+            className={`py-2 px-4 mr-2 mb-2 text-sm font-medium text-center text-white  ${
+              watch("body") ? "hover:bg-blue-700 bg-blue-600" : "bg-blue-500"
+            } rounded-sm border border-gray-300 focus:ring-4 focus:ring-blue-300 md:px-5`}
+          >
+            {props.comment.id ? "保存" : "コメント"}
+          </button>
+        </div>
+      )}
+    </form>
+  );
+};
