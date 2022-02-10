@@ -6,7 +6,7 @@ import { formatDistanceToNow } from "date-fns";
 import { ja } from "date-fns/locale";
 import { AuthContext } from "src/providers/AuthProvider";
 import { DropDown } from "src/components/Dropdown";
-import { Comment, deleteComment } from "src/apis/reviewComment";
+import { deleteComment } from "src/apis/reviewComment";
 import toast from "react-hot-toast";
 import { useSWRConfig } from "swr";
 import { API_URL } from "src/urls/api";
@@ -14,7 +14,7 @@ import { DeleteModal } from "src/components/Modal/DeleteModal";
 
 type Props = {
   reviewId?: number;
-  handleEdit: (comment: Comment) => void;
+  handleEdit: (commentId?: number, body?: string) => void;
 };
 
 export const CommentList: VFC<Props> = (props) => {
@@ -100,7 +100,7 @@ export const CommentList: VFC<Props> = (props) => {
       ))}
       <DeleteModal
         isOpen={openState.isOpen}
-        message="コメントを削除してもよろしいですか？"
+        message="コメントを完全に削除しますか？"
         closeModal={closeModal}
         handleDelete={() => handleDelete(openState.commentId)}
       />

@@ -1,11 +1,4 @@
-import {
-  useState,
-  useCallback,
-  VFC,
-  useEffect,
-  Dispatch,
-  SetStateAction,
-} from "react";
+import { useState, useCallback, VFC, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { postComment } from "src/apis/reviewComment";
 import { ErrorMessage } from "src/components/Message/ErrorMessage";
@@ -17,9 +10,9 @@ import { patchComment } from "src/apis/reviewComment";
 import { CommentState } from "src/components/Review/Review";
 
 type Props = {
-  setReviewComment: Dispatch<SetStateAction<CommentState>>;
+  handleEdit: (commentId?: number, body?: string) => void;
   comment: CommentState;
-  reviewId?: number;
+  reviewId: number;
 };
 
 export type CommentValue = {
@@ -40,17 +33,17 @@ export const CommentForm: VFC<Props> = (props) => {
   );
 
   const onSubmit = (params: CommentValue) => {
+    if (!comments) {
+      return;
+    }
     setValue("body", "");
     if (props.comment.id) {
       patchComment(params, props.reviewId, props.comment.id)
         .then((res) => {
-          props.setReviewComment({
-            id: undefined,
-            body: "",
-          });
+          props.handleEdit(undefined, "");
           mutate(
             `${API_URL}/reviews/${props.reviewId}/comments`,
-            comments?.map((comment) =>
+            comments.map((comment) =>
               comment.id === props.comment.id ? res.data : comment
             )
           );
@@ -63,8 +56,7 @@ export const CommentForm: VFC<Props> = (props) => {
       postComment(params, props.reviewId)
         .then((res) => {
           mutate(`${API_URL}/reviews/${props.reviewId}/comments`, [
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            ...comments!,
+            ...comments,
             res.data,
           ]);
           toast.success("コメントを投稿しました");
@@ -78,10 +70,7 @@ export const CommentForm: VFC<Props> = (props) => {
   const [isFocus, setIsFocus] = useState(false);
   const handleCancel = useCallback(() => {
     setIsFocus(false);
-    props.setReviewComment({
-      id: undefined,
-      body: "",
-    });
+    props.handleEdit(undefined, "");
     setValue("body", "");
   }, [props, setValue]);
 

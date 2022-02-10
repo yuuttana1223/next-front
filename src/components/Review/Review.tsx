@@ -25,10 +25,10 @@ export const Review: VFC = () => {
     body: "",
   });
 
-  const handleEdit = useCallback((comment: Comment) => {
+  const handleEdit = useCallback((commentId?: number, body?: string) => {
     setReviewComment({
-      id: comment.id,
-      body: comment.body,
+      id: commentId,
+      body: body,
     });
   }, []);
 
@@ -56,11 +56,11 @@ export const Review: VFC = () => {
         <CommentForm
           reviewId={review?.id}
           comment={reviewComment}
-          setReviewComment={setReviewComment}
+          handleEdit={handleEdit}
         />
       </div>
       <div className="mt-10">
-        <CommentList reviewId={review?.id} handleEdit={handleEdit} />
+        <CommentList reviewId={review.id} handleEdit={handleEdit} />
       </div>
     </div>
   );
