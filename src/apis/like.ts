@@ -2,7 +2,6 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { API_URL } from "src/urls/api";
 export type Like = {
-  id: number;
   user_id: number;
   review_id: number;
 };

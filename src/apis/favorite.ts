@@ -2,11 +2,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { API_URL } from "src/urls/api";
 export type Favorite = {
-  id: number;
   user_id: number;
   review_id: number;
-  created_at: string;
-  updated_at: string;
 };
 
 export const postFavorite = (reviewId: number) => {
