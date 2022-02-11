@@ -5,14 +5,14 @@ import { ErrorMessage } from "src/components/Message/ErrorMessage";
 import toast from "react-hot-toast";
 import { useSWRConfig } from "swr";
 import { API_URL } from "src/urls/api";
-import { useReviewComments } from "src/hooks/useReviewComments";
 import { patchComment } from "src/apis/reviewComment";
 import { CommentState } from "src/components/Review/Review";
+import { useAllComments } from "src/hooks/useAllComments";
+import { useRouter } from "next/router";
 
 type Props = {
   handleEdit: (commentId?: number, body?: string) => void;
   comment: CommentState;
-  reviewId: number;
 };
 
 export type CommentValue = {
@@ -28,21 +28,21 @@ export const CommentForm: VFC<Props> = (props) => {
     setValue,
   } = useForm<CommentValue>();
   const { mutate } = useSWRConfig();
-  const { comments, commentsLoading, commentsError } = useReviewComments(
-    props.reviewId
-  );
+  const { comments } = useAllComments();
+  const router = useRouter();
 
   const onSubmit = (params: CommentValue) => {
     if (!comments) {
       return;
     }
+    const reviewId = Number(router.query.id);
     setValue("body", "");
     if (props.comment.id) {
-      patchComment(params, props.reviewId, props.comment.id)
+      patchComment(params, reviewId, props.comment.id)
         .then((res) => {
           props.handleEdit(undefined, "");
           mutate(
-            `${API_URL}/reviews/${props.reviewId}/comments`,
+            `${API_URL}/comments`,
             comments.map((comment) =>
               comment.id === props.comment.id ? res.data : comment
             )
@@ -53,12 +53,9 @@ export const CommentForm: VFC<Props> = (props) => {
           toast.error("コメントの更新に失敗しました");
         });
     } else {
-      postComment(params, props.reviewId)
+      postComment(params, reviewId)
         .then((res) => {
-          mutate(`${API_URL}/reviews/${props.reviewId}/comments`, [
-            ...comments,
-            res.data,
-          ]);
+          mutate(`${API_URL}/comments`, [...comments, res.data]);
           toast.success("コメントを投稿しました");
         })
         .catch(() => {
@@ -77,14 +74,6 @@ export const CommentForm: VFC<Props> = (props) => {
   useEffect(() => {
     setValue("body", props.comment.body ?? "");
   }, [props.comment.body, setValue]);
-
-  if (commentsLoading) {
-    return <></>;
-  }
-
-  if (commentsError) {
-    return <ErrorMessage message={commentsError.message} />;
-  }
 
   return (
     <form

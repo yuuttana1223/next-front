@@ -1,3 +1,5 @@
+// 親コンポーネントでreviews, likes, comments, favoritesはundefinedではないことが保証されている
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { VFC, useContext, useState, useCallback } from "react";
 import { HiOutlineChat } from "react-icons/hi";
 import { AuthContext } from "src/providers/AuthProvider";
@@ -13,20 +15,17 @@ import { API_URL } from "src/urls/api";
 import { useAllReviews } from "src/hooks/useAllReviews";
 import toast from "react-hot-toast";
 import { intlFormat } from "date-fns";
-import { deleteLike, Like, postLike } from "src/apis/like";
+import { deleteLike, postLike } from "src/apis/like";
 import { useAllLikes } from "src/hooks/useAllLikes";
-import { Comment } from "src/apis/reviewComment";
 import { GoodButton } from "src/components/shared/Button/GoodButton";
 import { FavoriteButton } from "src/components/shared/Button/FavoriteButton";
 import { deleteFavorite, postFavorite } from "src/apis/favorite";
 import { useAllFavorites } from "src/hooks/useAllFavorites";
+import { useAllComments } from "src/hooks/useAllComments";
 
 type Props = {
   review: Review;
-  likes: Like[];
-  comments: Comment[];
   isEditable?: boolean;
-  isFavorite?: boolean;
 };
 
 export const ReviewItem: VFC<Props> = (props) => {
@@ -36,17 +35,26 @@ export const ReviewItem: VFC<Props> = (props) => {
   const format = intlFormat;
   const { mutate } = useSWRConfig();
   const { likes } = useAllLikes();
-  const [likeState, setLikeState] = useState({
-    likes: props.likes.map((like) => {
-      return {
-        userId: like.user_id,
-        reviewId: like.review_id,
-      };
-    }),
-    isLiked: props.likes.some((like) => like.user_id === currentUser?.id),
-  });
-  const [isFavorite, setIsFavorite] = useState(props.isFavorite);
   const { favorites } = useAllFavorites();
+  const { comments } = useAllComments();
+  // レビューを削除後props.reviewがundefinedになるので、props.review?にした
+  const [likeState, setLikeState] = useState({
+    likes: likes!.filter((like) => like.review_id === props.review?.id),
+    isLiked: likes!.some(
+      (like) =>
+        like.review_id === props.review?.id && like.user_id === currentUser?.id
+    ),
+  });
+  const [isFavorite, setIsFavorite] = useState(
+    favorites!.some(
+      (favorite) =>
+        favorite.review_id === props.review?.id &&
+        favorite.user_id === currentUser?.id
+    )
+  );
+
+  console.log(props);
+
   const router = useRouter();
   const likeReview = useCallback(
     (reviewId: number) => {
@@ -58,8 +66,8 @@ export const ReviewItem: VFC<Props> = (props) => {
           likes: [
             ...prevLikeState.likes,
             {
-              userId: currentUser.id,
-              reviewId: reviewId,
+              user_id: currentUser.id,
+              review_id: reviewId,
             },
           ],
           isLiked: true,
@@ -73,7 +81,7 @@ export const ReviewItem: VFC<Props> = (props) => {
     setLikeState((prevLikeState) => {
       return {
         likes: prevLikeState.likes.filter(
-          (like) => like.userId !== currentUser?.id
+          (like) => like.user_id !== currentUser?.id
         ),
         isLiked: false,
       };
@@ -93,13 +101,12 @@ export const ReviewItem: VFC<Props> = (props) => {
   }, []);
 
   const handleDelete = useCallback(() => {
-    deleteReview(props.review.id)
+    deleteReview(props.review?.id)
       .then(() => {
         mutate(
           `${API_URL}/reviews`,
-          reviews?.filter((review) => review.id !== props.review.id)
+          reviews?.filter((review) => review.id !== props.review?.id)
         );
-        mutate(`${API_URL}/reviews/${props.review.id}`);
         toast.success("レビューを削除しました", {
           duration: 10000,
         });
@@ -108,21 +115,17 @@ export const ReviewItem: VFC<Props> = (props) => {
       .catch(() => {
         toast.error("レビュー削除に失敗しました");
       });
-  }, [props.review, reviews, mutate, router]);
+  }, [props.review?.id, mutate, reviews, router]);
 
   const handleLike = useCallback(() => {
     if (!likes) {
       return;
     }
-    const reviewId = props.review.id;
+    const reviewId = props.review?.id;
     if (likeState.isLiked) {
       undoLike();
       deleteLike(reviewId)
         .then(() => {
-          mutate(
-            `${API_URL}/reviews/${reviewId}/likes`,
-            likeState.likes.filter((like) => like.userId !== currentUser?.id)
-          );
           mutate(
             `${API_URL}/likes`,
             likes.filter(
@@ -138,10 +141,6 @@ export const ReviewItem: VFC<Props> = (props) => {
       likeReview(reviewId);
       postLike(reviewId)
         .then((res) => {
-          mutate(`${API_URL}/reviews/${reviewId}/likes`, [
-            ...likeState.likes,
-            res.data,
-          ]);
           mutate(`${API_URL}/likes`, [...likes, res.data]);
         })
         .catch(() => {
@@ -151,7 +150,6 @@ export const ReviewItem: VFC<Props> = (props) => {
   }, [
     props.review,
     likeState.isLiked,
-    likeState.likes,
     undoLike,
     mutate,
     likes,
@@ -163,12 +161,11 @@ export const ReviewItem: VFC<Props> = (props) => {
     if (!favorites) {
       return;
     }
-    const reviewId = props.review.id;
+    const reviewId = props.review?.id;
     if (isFavorite) {
       setIsFavorite(false);
       deleteFavorite(reviewId)
         .then(() => {
-          mutate(`${API_URL}/reviews/${reviewId}/favorites`, false);
           mutate(`${API_URL}/favorites`, [
             ...favorites.filter((favorite) => favorite.review_id !== reviewId),
           ]);
@@ -180,7 +177,6 @@ export const ReviewItem: VFC<Props> = (props) => {
       setIsFavorite(true);
       postFavorite(reviewId)
         .then((res) => {
-          mutate(`${API_URL}/reviews/${reviewId}/favorites`, true);
           mutate(`${API_URL}/favorites`, [...favorites, res.data]);
         })
         .catch(() => {
@@ -189,8 +185,6 @@ export const ReviewItem: VFC<Props> = (props) => {
     }
   }, [favorites, isFavorite, mutate, props.review]);
 
-  console.log(isFavorite);
-
   return (
     <div className="text-gray-900">
       <div className="overflow-hidden h-full rounded-lg border-2 shadow">
@@ -198,7 +192,7 @@ export const ReviewItem: VFC<Props> = (props) => {
           <Link
             href={
               currentUser
-                ? PATH.REVIEWS.SHOW(props.review.id)
+                ? PATH.REVIEWS.SHOW(props.review?.id)
                 : PATH.USERS.SIGN_IN
             }
           >
@@ -209,7 +203,7 @@ export const ReviewItem: VFC<Props> = (props) => {
                   : "text-blue-500 hover:text-blue-700"
               }`}
             >
-              {props.review.lecture_name}
+              {props.review?.lecture_name}
             </a>
           </Link>
         </h2>
@@ -218,27 +212,27 @@ export const ReviewItem: VFC<Props> = (props) => {
             <p>
               <span className="mr-1 font-semibold">担当教員:</span>
               <br />
-              {props.review.teacher_name}
+              {props.review?.teacher_name}
             </p>
             <p>
               <span className="mr-1 font-semibold">内容充実度:</span>
-              {props.review.adequacy}
+              {props.review?.adequacy}
             </p>
             <p>
               <span className="mr-1 font-semibold">課題の量:</span>
-              {props.review.submission_quantity}
+              {props.review?.submission_quantity}
             </p>
             <p>
               <span className="mr-1 font-semibold">難易度:</span>
-              {props.review.difficulty}
+              {props.review?.difficulty}
             </p>
             <p>
               <span className="mr-1 font-semibold">期末テスト:</span>
-              {props.review.is_ending_test ? "あり" : "なし"}
+              {props.review?.is_ending_test ? "あり" : "なし"}
             </p>
             <p>
               <span className="mr-1 font-semibold">授業形式:</span>
-              {props.review.lesson_type}
+              {props.review?.lesson_type}
             </p>
           </div>
           <div
@@ -248,13 +242,13 @@ export const ReviewItem: VFC<Props> = (props) => {
           >
             <p className="font-semibold ">内容:</p>
             {currentUser ? (
-              <span>{props.review.content}</span>
+              <span>{props.review?.content}</span>
             ) : (
               <div>
                 <span>
-                  {props.review.content.substring(0, 20)}
-                  {props.review.content.length &&
-                    props.review.content.length > 20 &&
+                  {props.review?.content.substring(0, 20)}
+                  {props.review?.content.length &&
+                    props.review?.content.length > 20 &&
                     "..."}
                 </span>
                 <div className="text-center">
@@ -271,7 +265,7 @@ export const ReviewItem: VFC<Props> = (props) => {
           <div className="space-y-1 text-sm text-gray-700">
             <time>
               {props.review &&
-                format(Date.parse(props.review.created_at), {
+                format(Date.parse(props.review?.created_at), {
                   year: "numeric",
                   month: "long",
                   day: "numeric",
@@ -279,14 +273,14 @@ export const ReviewItem: VFC<Props> = (props) => {
             </time>
             <p>
               <span className="mr-1 font-semibold text-gray-900">投稿者:</span>
-              {props.review.username}
+              {props.review?.username}
             </p>
           </div>
 
           <div className="flex justify-between my-2">
             <GoodButton
               onClick={currentUser ? handleLike : pushLogin}
-              count={likeState.likes.length}
+              count={likeState.likes?.length}
               isLiked={likeState.isLiked}
             />
             <FavoriteButton
@@ -294,9 +288,9 @@ export const ReviewItem: VFC<Props> = (props) => {
               isFavorite={isFavorite}
             />
           </div>
-          {props.isEditable && currentUser?.id === props.review.user_id && (
+          {props.isEditable && currentUser?.id === props.review?.user_id && (
             <div className="mt-4 space-x-2">
-              <EditButton href={PATH.REVIEWS.EDIT(props.review.id)} />
+              <EditButton href={PATH.REVIEWS.EDIT(props.review?.id)} />
               <DeleteButton onClick={openModal} />
               <DeleteModal
                 isOpen={isOpen}
@@ -310,7 +304,12 @@ export const ReviewItem: VFC<Props> = (props) => {
         <div className="p-3 text-sm text-right text-gray-400 border-t-2">
           <HiOutlineChat title="コメント数" size="24px" className="inline" />
           <span className="ml-1 align-bottom">
-            コメント数: {props.comments.length}
+            コメント数:{" "}
+            {
+              comments?.filter(
+                (comment) => comment.review_id === props.review?.id
+              ).length
+            }
           </span>
         </div>
       </div>
