@@ -6,13 +6,17 @@ import { Loader } from "src/components/Loader";
 import { ErrorMessage } from "src/components/Message/ErrorMessage";
 import { useAllLikes } from "src/hooks/useAllLikes";
 import { useAllComments } from "src/hooks/useAllComments";
+import { useAllFavorites } from "src/hooks/useAllFavorites";
 
 export const Reviews: VFC = () => {
   const { reviews, reviewsError, reviewsLoading } = useAllReviews();
-  const { likes, likesError, likesLoading } = useAllLikes();
-  const { comments, commentsError, commentsLoading } = useAllComments();
+  const { likesError, likesLoading } = useAllLikes();
+  const { commentsError, commentsLoading } = useAllComments();
+  const { favoritesError, favoritesLoading } = useAllFavorites();
 
-  if (reviewsLoading || likesLoading || commentsLoading) {
+  console.log("reviews");
+
+  if (reviewsLoading || likesLoading || commentsLoading || favoritesLoading) {
     return <Loader />;
   }
 
@@ -28,6 +32,12 @@ export const Reviews: VFC = () => {
     return <ErrorMessage message={commentsError.message} className="text-xl" />;
   }
 
+  if (favoritesError) {
+    return (
+      <ErrorMessage message={favoritesError.message} className="text-xl" />
+    );
+  }
+
   return (
     <div>
       <div className="fixed right-6 bottom-6 md:right-10 md:bottom-10">
@@ -36,13 +46,7 @@ export const Reviews: VFC = () => {
       <div className="flex flex-wrap -m-4">
         {reviews?.map((review) => (
           <div key={review.id} className="p-4 w-full md:w-1/2 lg:w-1/3">
-            <ReviewItem
-              review={review}
-              likes={likes?.filter((like) => review.id === like.review_id)}
-              comments={comments?.filter(
-                (comment) => comment.review_id === review.id
-              )}
-            />
+            <ReviewItem review={review} />
           </div>
         ))}
       </div>

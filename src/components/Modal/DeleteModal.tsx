@@ -57,7 +57,9 @@ export const DeleteModal: VFC<Props> = (props) => {
               </div>
               <div className="mt-2">
                 <p className="text-sm text-center text-gray-500">
-                  {props.message}
+                  {props.message.split("？")[0]}？
+                  <br />
+                  {props.message.split("？")[1]}
                 </p>
               </div>
 

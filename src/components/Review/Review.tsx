@@ -1,14 +1,15 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { VFC, useState, useCallback } from "react";
 import { ReviewItem } from "src/components/Review/ReviewItem";
-import { useReview } from "src/hooks/useReview";
 import { Loader } from "src/components/Loader";
 import { ErrorMessage } from "src/components/Message/ErrorMessage";
-import { useLikes } from "src/hooks/useLikes";
 import { useRouter } from "next/router";
 import { CommentList } from "src/components/Comment/CommentList";
 import { CommentForm } from "src/components/Form/CommentForm";
-import { Comment } from "src/apis/reviewComment";
-import { useReviewComments } from "src/hooks/useReviewComments";
+import { useAllFavorites } from "src/hooks/useAllFavorites";
+import { useAllReviews } from "src/hooks/useAllReviews";
+import { useAllLikes } from "src/hooks/useAllLikes";
+import { useAllComments } from "src/hooks/useAllComments";
 
 export type CommentState = {
   id?: number;
@@ -16,51 +17,59 @@ export type CommentState = {
 };
 
 export const Review: VFC = () => {
-  const { review, reviewLoading, reviewError } = useReview();
+  const { reviews, reviewsError, reviewsLoading } = useAllReviews();
   const router = useRouter();
-  const { likes, likesError, likesLoading } = useLikes(router.query.id);
-  const { comments } = useReviewComments(review?.id);
+  const reviewId = Number(router.query.id);
+  const { likesError, likesLoading } = useAllLikes();
+  const { favoritesError, favoritesLoading } = useAllFavorites();
+  const { commentsError, commentsLoading } = useAllComments();
   const [reviewComment, setReviewComment] = useState<CommentState>({
     id: undefined,
     body: "",
   });
 
-  const handleEdit = useCallback((comment: Comment) => {
+  const handleEdit = useCallback((commentId?: number, body?: string) => {
     setReviewComment({
-      id: comment.id,
-      body: comment.body,
+      id: commentId,
+      body: body,
     });
   }, []);
 
-  if (reviewLoading || likesLoading) {
+  console.log("review");
+
+  if (reviewsLoading || likesLoading || favoritesLoading || commentsLoading) {
     return <Loader />;
   }
 
-  if (reviewError) {
-    return <ErrorMessage message={reviewError.message} className="text-xl" />;
+  if (reviewsError) {
+    return <ErrorMessage message={reviewsError.message} className="text-xl" />;
   }
 
   if (likesError) {
     return <ErrorMessage message={likesError.message} className="text-xl" />;
   }
 
+  if (favoritesError) {
+    return (
+      <ErrorMessage message={favoritesError.message} className="text-xl" />
+    );
+  }
+
+  if (commentsError) {
+    return <ErrorMessage message={commentsError.message} className="text-xl" />;
+  }
+
   return (
     <div className="p-4 -m-4 mx-auto w-full md:w-3/5 lg:w-2/5">
       <ReviewItem
-        review={review}
-        likes={likes}
-        isEditPage
-        comments={comments}
+        review={reviews!.find((review) => review.id === reviewId)!}
+        isEditable
       />
       <div className="mt-10">
-        <CommentForm
-          reviewId={review?.id}
-          comment={reviewComment}
-          setReviewComment={setReviewComment}
-        />
+        <CommentForm comment={reviewComment} handleEdit={handleEdit} />
       </div>
       <div className="mt-10">
-        <CommentList reviewId={review?.id} handleEdit={handleEdit} />
+        <CommentList handleEdit={handleEdit} />
       </div>
     </div>
   );

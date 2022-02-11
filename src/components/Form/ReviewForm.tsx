@@ -35,7 +35,6 @@ export const ReviewForm: VFC<Props> = (props) => {
     if (props.review) {
       patchReview(params, props.review.id)
         .then((res) => {
-          mutate(`${API_URL}/reviews/${res.data.id}`, res.data);
           mutate(
             `${API_URL}/reviews`,
             reviews?.map((review) =>

@@ -9,7 +9,7 @@ import { Comment } from "src/apis/reviewComment";
 
 type Props = {
   openModal: (commentId: number) => void;
-  handleEdit: (comment: Comment) => void;
+  handleEdit: (commentId?: number, body?: string) => void;
   comment: Comment;
 };
 
@@ -36,7 +36,9 @@ export const DropDown: VFC<Props> = (props) => {
           <Menu.Item>
             {({ active }) => (
               <button
-                onClick={() => props.handleEdit(props.comment)}
+                onClick={() =>
+                  props.handleEdit(props.comment.id, props.comment.body)
+                }
                 className={`${
                   active ? "bg-gray-200" : ""
                 }  flex w-full py-2 pl-2 text-sm text-gray-900`}
