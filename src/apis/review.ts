@@ -19,6 +19,47 @@ export type Review = {
   updated_at: string;
 };
 
+export type SelectType = {
+  sortBy: string;
+  name: string;
+  value: string;
+  text: string;
+};
+
+export const selects: SelectType[] = [
+  {
+    sortBy: "created_at",
+    name: "order",
+    value: "desc",
+    text: "投稿日時が新しい順",
+  },
+  {
+    sortBy: "created_at",
+    name: "order",
+    value: "asc",
+    text: "投稿日時が古い順",
+  },
+  { sortBy: "lesson", name: "type", value: "対面", text: "対面" },
+  {
+    sortBy: "lesson",
+    name: "type",
+    value: "リアルタイムオンライン",
+    text: "リアルタイムオンライン",
+  },
+  {
+    sortBy: "lesson",
+    name: "type",
+    value: "ハイブリッド",
+    text: "ハイブリッド",
+  },
+  {
+    sortBy: "lesson",
+    name: "type",
+    value: "オンデマンド",
+    text: "オンデマンド",
+  },
+];
+
 export const fetchReviews = (queryParams: string) => {
   return axios.get<Review[]>(`${API_URL}/reviews${queryParams}`);
 };
