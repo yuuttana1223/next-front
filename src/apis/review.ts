@@ -19,6 +19,10 @@ export type Review = {
   updated_at: string;
 };
 
+export const fetchReviews = (queryParams: string) => {
+  return axios.get<Review[]>(`${API_URL}/reviews${queryParams}`);
+};
+
 export const postReview = (params: FormValues) => {
   return axios.post<Review>(`${API_URL}/reviews`, {
     "access-token": Cookies.get("access_token"),
