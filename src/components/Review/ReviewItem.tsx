@@ -263,11 +263,14 @@ export const ReviewItem: VFC<Props> = (props) => {
           <div className="space-y-1 text-sm text-gray-700">
             <time>
               {props.review &&
-                format(Date.parse(props.review?.created_at), {
+                `${format(Date.parse(props.review?.created_at), {
                   year: "numeric",
                   month: "long",
                   day: "numeric",
-                })}
+                })} ${
+                  props.review.created_at !== props.review.updated_at &&
+                  "(編集済み)"
+                }`}
             </time>
             <p>
               <span className="mr-1 font-semibold text-gray-900">投稿者:</span>
