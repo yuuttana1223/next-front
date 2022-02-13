@@ -1,4 +1,4 @@
-import { VFC } from "react";
+import { VFC, useState, useEffect, useCallback } from "react";
 import { ReviewItem } from "src/components/Review/ReviewItem";
 import { NewButtonLink } from "src/components/shared/Link/NewButtonLink";
 import { useAllReviews } from "src/hooks/useAllReviews";
@@ -7,14 +7,56 @@ import { ErrorMessage } from "src/components/Message/ErrorMessage";
 import { useAllLikes } from "src/hooks/useAllLikes";
 import { useAllComments } from "src/hooks/useAllComments";
 import { useAllFavorites } from "src/hooks/useAllFavorites";
+import { SortSelect } from "src/components/shared/Select/SortSelect";
+import { fetchReviews, selects, Review, SelectType } from "src/apis/review";
+import { useRouter } from "next/router";
+
+export type SelectStateType = {
+  reviews?: Review[];
+  select?: SelectType;
+};
 
 export const Reviews: VFC = () => {
   const { reviews, reviewsError, reviewsLoading } = useAllReviews();
   const { likesError, likesLoading } = useAllLikes();
   const { commentsError, commentsLoading } = useAllComments();
   const { favoritesError, favoritesLoading } = useAllFavorites();
+  const [selectState, setSelectState] = useState<SelectStateType>({
+    reviews,
+    select: selects[0],
+  });
+  const router = useRouter();
+  const sortSelect = useCallback((reviews: Review[], select?: SelectType) => {
+    setSelectState({
+      reviews,
+      select,
+    });
+  }, []);
 
-  console.log("reviews");
+  useEffect(() => {
+    if (router.query.sort_by) {
+      fetchReviews(router.asPath).then((res) => {
+        sortSelect(
+          res.data,
+          selects.find(
+            (select) => select.value === Object.values(router.query)[1]
+          )
+        );
+      });
+    } else {
+      setSelectState({
+        reviews,
+        select: selects[0],
+      });
+    }
+  }, [
+    reviews,
+    router.asPath,
+    router.query,
+    router.query.sort_by,
+    router.query.value,
+    sortSelect,
+  ]);
 
   if (reviewsLoading || likesLoading || commentsLoading || favoritesLoading) {
     return <Loader />;
@@ -40,11 +82,18 @@ export const Reviews: VFC = () => {
 
   return (
     <div>
+      <div className="mb-10">
+        <SortSelect
+          selects={selects}
+          state={selectState}
+          sortSelect={sortSelect}
+        />
+      </div>
       <div className="fixed right-6 bottom-6 md:right-10 md:bottom-10">
         <NewButtonLink />
       </div>
       <div className="flex flex-wrap -m-4">
-        {reviews?.map((review) => (
+        {selectState.reviews?.map((review) => (
           <div key={review.id} className="p-4 w-full md:w-1/2 lg:w-1/3">
             <ReviewItem review={review} />
           </div>
