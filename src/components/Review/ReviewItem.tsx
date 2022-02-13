@@ -268,8 +268,9 @@ export const ReviewItem: VFC<Props> = (props) => {
                   month: "long",
                   day: "numeric",
                 })} ${
-                  props.review.created_at !== props.review.updated_at &&
-                  "(編集済み)"
+                  props.review.created_at !== props.review.updated_at
+                    ? "(編集済み)"
+                    : ""
                 }`}
             </time>
             <p>
