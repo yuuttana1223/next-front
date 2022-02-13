@@ -53,8 +53,6 @@ export const ReviewItem: VFC<Props> = (props) => {
     )
   );
 
-  console.log(props);
-
   const router = useRouter();
   const likeReview = useCallback(
     (reviewId: number) => {
