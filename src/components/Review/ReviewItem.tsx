@@ -214,11 +214,11 @@ export const ReviewItem: VFC<Props> = (props) => {
             </p>
             <p>
               <span className="mr-1 font-semibold">内容充実度:</span>
-              {props.review?.adequacy}
+              {props.review?.level_of_satisfaction}
             </p>
             <p>
               <span className="mr-1 font-semibold">課題の量:</span>
-              {props.review?.submission_quantity}
+              {props.review?.workload}
             </p>
             <p>
               <span className="mr-1 font-semibold">難易度:</span>
@@ -251,7 +251,7 @@ export const ReviewItem: VFC<Props> = (props) => {
                 </span>
                 <div className="text-center">
                   <Link href={PATH.USERS.SIGN_IN}>
-                    <a className="hover:text-gray-700 cursor-pointer ">
+                    <a className="hover:text-gray-700 cursor-pointer">
                       続きを見る
                     </a>
                   </Link>

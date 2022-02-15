@@ -10,8 +10,8 @@ export type Review = {
   lecture_name: string;
   teacher_name: string;
   lesson_type: string;
-  adequacy: string;
-  submission_quantity: string;
+  level_of_satisfaction: string;
+  workload: string;
   difficulty: string;
   is_ending_test: boolean;
   content: string;
@@ -73,8 +73,8 @@ export const postReview = (params: FormValues) => {
       lecture_name: params.lecture_name2 ?? params.lecture_name,
       teacher_name: params.teacher_name2 ?? params.teacher_name,
       lesson_type: params.lesson_type,
-      adequacy: params.adequacy,
-      submission_quantity: params.submission_quantity,
+      level_of_satisfaction: params.level_of_satisfaction,
+      workload: params.workload,
       difficulty: params.difficulty,
       is_ending_test: params.is_ending_test,
       content: params.content,
@@ -95,8 +95,8 @@ export const patchReview = (params: FormValues, reviewId?: number) => {
         ? params.teacher_name2
         : params.teacher_name,
       lesson_type: params.lesson_type,
-      adequacy: params.adequacy,
-      submission_quantity: params.submission_quantity,
+      level_of_satisfaction: params.level_of_satisfaction,
+      workload: params.workload,
       difficulty: params.difficulty,
       is_ending_test: params.is_ending_test,
       content: params.content,

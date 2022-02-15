@@ -101,29 +101,29 @@ export const ReviewForm: VFC<Props> = (props) => {
               name="lesson_type"
               title="授業形式"
               texts={[
-                "リアルタイムオンライン",
                 "対面",
+                "リアルタイムオンライン",
                 "オンデマンド",
                 "ハイブリッド",
               ]}
               selected={props.review?.lesson_type}
             />
             <RadioButton
-              name="adequacy"
+              name="level_of_satisfaction"
               title="内容充実度"
-              texts={["満足", "やや満足", "普通", "やや不満", "不満"]}
-              selected={props.review?.adequacy}
+              texts={["大変不満", "不満", "普通", "満足", "大変満足"]}
+              selected={props.review?.level_of_satisfaction}
             />
             <RadioButton
-              name="submission_quantity"
+              name="workload"
               title="課題の量"
-              texts={["多い", "やや多い", "普通", "やや少ない", "少ない"]}
-              selected={props.review?.submission_quantity}
+              texts={["大変少ない", "少ない", "普通", "多い", "大変多い"]}
+              selected={props.review?.workload}
             />
             <RadioButton
               name="difficulty"
               title="難易度"
-              texts={["難しい", "やや難しい", "普通", "やや易しい", "易しい"]}
+              texts={["大変易しい", "易しい", "普通", "難しい", "大変難しい"]}
               selected={props.review?.difficulty}
             />
             <RadioButton
