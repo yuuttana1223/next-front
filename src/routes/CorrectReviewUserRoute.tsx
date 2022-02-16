@@ -1,13 +1,15 @@
 import { VFC, ReactNode, useContext, useEffect } from "react";
 import { AuthContext } from "src/providers/AuthProvider";
-import { useReview } from "src/hooks/useReview";
 import { useRouter } from "next/router";
 import { PATH } from "src/urls/path";
+import { useAllReviews } from "src/hooks/useAllReviews";
 
 export const CorrectReviewUserRoute: VFC<{ children: ReactNode }> = (props) => {
-  const { currentUser } = useContext(AuthContext);
-  const { review } = useReview();
   const router = useRouter();
+  const reviewId = Number(router.query.id);
+  const { reviews } = useAllReviews();
+  const review = reviews?.find((review) => review.id === reviewId);
+  const { currentUser } = useContext(AuthContext);
 
   useEffect(() => {
     if (review && currentUser?.id !== review.user_id) {
