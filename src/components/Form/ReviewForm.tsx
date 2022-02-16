@@ -129,14 +129,15 @@ export const ReviewForm: VFC<Props> = (props) => {
             <RadioButton
               name="is_ending_test"
               title="期末テスト"
+              values={["true", "false"]}
               texts={["あり", "なし"]}
               selected={
                 // 新規投稿のときはundefined, 編集のときは「"あり"」か「"なし"」
-                props.review?.is_ending_test
-                  ? "あり"
-                  : props.review?.is_ending_test === undefined
-                  ? undefined
-                  : "なし"
+                props.review?.is_ending_test === true
+                  ? "true"
+                  : props.review?.is_ending_test === false
+                  ? "false"
+                  : undefined
               }
             />
             <Textarea

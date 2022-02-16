@@ -39,7 +39,9 @@ export const Reviews: VFC = () => {
         sortSelect(
           res.data,
           selects.find(
-            (select) => select.value === Object.values(router.query)[1]
+            (select) =>
+              select.sortBy === Object.values(router.query)[0] &&
+              select.value === Object.values(router.query)[1]
           )
         );
       });
