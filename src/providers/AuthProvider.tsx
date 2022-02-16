@@ -22,20 +22,16 @@ export const AuthProvider: VFC<{ children: ReactNode }> = (props) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (fetchCurrentUser() === undefined) {
-      setLoading(false);
-    } else {
-      fetchCurrentUser()
-        ?.then((res) => {
-          setCurrentUser(res.data.user);
-        })
-        .catch((e: AxiosError) => {
-          console.error(e.message);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
+    fetchCurrentUser()
+      ?.then((res) => {
+        setCurrentUser(res.data.user);
+      })
+      .catch((e: AxiosError) => {
+        console.error(e.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      }) === undefined && setLoading(false);
   }, []);
 
   if (loading) {

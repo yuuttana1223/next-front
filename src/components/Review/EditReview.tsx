@@ -1,21 +1,24 @@
 import { ReviewForm } from "src/components/Form/ReviewForm";
-import { useReview } from "src/hooks/useReview";
 import { Loader } from "src/components/Loader";
 import { ErrorMessage } from "src/components/Message/ErrorMessage";
+import { useAllReviews } from "src/hooks/useAllReviews";
+import { useRouter } from "next/router";
 export const EditReview = () => {
-  const { review, reviewLoading, reviewError } = useReview();
+  const { reviews, reviewsError, reviewsLoading } = useAllReviews();
+  const router = useRouter();
+  const reviewId = Number(router.query.id);
 
-  if (reviewLoading) {
+  if (reviewsLoading) {
     return <Loader />;
   }
 
-  if (reviewError) {
-    return <ErrorMessage message={reviewError.message} />;
+  if (reviewsError) {
+    return <ErrorMessage message={reviewsError.message} />;
   }
 
   return (
     <div>
-      <ReviewForm review={review} />
+      <ReviewForm review={reviews?.find((review) => review.id === reviewId)} />
     </div>
   );
 };

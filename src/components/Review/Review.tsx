@@ -35,8 +35,6 @@ export const Review: VFC = () => {
     });
   }, []);
 
-  console.log("review");
-
   if (reviewsLoading || likesLoading || favoritesLoading || commentsLoading) {
     return <Loader />;
   }
