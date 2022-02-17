@@ -34,7 +34,7 @@ export const Reviews: VFC = () => {
   }, []);
 
   useEffect(() => {
-    if (router.query.sort_by) {
+    if (router.query.sort_by || router.query.search_query) {
       fetchReviews(router.asPath).then((res) => {
         sortSelect(
           res.data,
@@ -42,7 +42,7 @@ export const Reviews: VFC = () => {
             (select) =>
               select.sortBy === Object.values(router.query)[0] &&
               select.value === Object.values(router.query)[1]
-          )
+          ) ?? selects[0]
         );
       });
     } else {
