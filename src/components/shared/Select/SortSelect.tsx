@@ -27,7 +27,7 @@ export const SortSelect: VFC<Props> = (props) => {
   );
 
   return (
-    <div className="w-56">
+    <div className="w-60">
       <Listbox value={props.state.select} onChange={handleChange}>
         <div className="relative mt-1">
           <Listbox.Button className="relative py-2 pr-10 pl-3 w-full text-left bg-white rounded-md border-2 focus-visible:border-indigo-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-300 cursor-default sm:text-sm">
