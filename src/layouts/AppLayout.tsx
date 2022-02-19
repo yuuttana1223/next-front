@@ -1,16 +1,20 @@
-import { ReactNode, VFC, useState } from "react";
+import { ReactNode, VFC, useState, useCallback, useContext } from "react";
 import { Header } from "src/layouts/Header";
-import { HiMenu, HiOutlineUserCircle } from "react-icons/hi";
+import { HiMenu } from "react-icons/hi";
 import { Drawer } from "src/components/Drawer";
 import { KcgLogoLink } from "src/components/shared/Link/KcgLogoLink";
 import { SearchInput } from "src/components/shared/Input/SearchInput";
 import { useRouter } from "next/router";
 import { PATH } from "src/urls/path";
+import { SettingDropDown } from "src/components/Dropdown/SettingDropDown";
 import { SearchModal } from "src/components/Modal/SearchModal";
+import { AuthContext } from "src/providers/AuthProvider";
+import { LoginLink } from "src/components/shared/Link/LoginLink";
 
 export const AppLayout: VFC<{ children: ReactNode }> = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSearchModal, setIsSearchModal] = useState(false);
+  const { currentUser } = useContext(AuthContext);
   const router = useRouter();
   const handleClick = useCallback(
     (text: string) => {
@@ -51,13 +55,17 @@ export const AppLayout: VFC<{ children: ReactNode }> = (props) => {
             />
           </div>
         )}
-        <div className="p-2 ml-auto">
-          <HiOutlineUserCircle
-            title="ユーザー"
-            size="40px"
-            className="text-gray-700 cursor-pointer"
-          />
-        </div>
+
+        {currentUser ? (
+          <div className="ml-2 md:ml-auto">
+            <SettingDropDown />
+          </div>
+        ) : (
+          <div className="flex items-center mx-2 md:ml-auto">
+            <LoginLink href={PATH.USERS.SIGN_IN}>ログイン</LoginLink>
+          </div>
+        )}
+
         <Drawer isOpen={isOpen} setIsOpen={setIsOpen} />
       </Header>
       <main>
