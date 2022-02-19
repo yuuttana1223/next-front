@@ -6,10 +6,24 @@ import { KcgLogoLink } from "src/components/shared/Link/KcgLogoLink";
 import { SearchInput } from "src/components/shared/Input/SearchInput";
 import { useRouter } from "next/router";
 import { PATH } from "src/urls/path";
+import { SearchModal } from "src/components/Modal/SearchModal";
 
 export const AppLayout: VFC<{ children: ReactNode }> = (props) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isSearchModal, setIsSearchModal] = useState(false);
   const router = useRouter();
+  const handleClick = useCallback(
+    (text: string) => {
+      router.push(
+        `${
+          Object.keys(router.query)[0] === "sort_by"
+            ? `${router.asPath.split("&search_query")[0]}&`
+            : `${PATH.ROOT}?`
+        }search_query=${text}`
+      );
+    },
+    [router]
+  );
   return (
     <>
       <Header>
@@ -21,12 +35,20 @@ export const AppLayout: VFC<{ children: ReactNode }> = (props) => {
             onClick={() => setIsOpen((prevIsOpen) => !prevIsOpen)}
           />
         </div>
-        <h1 className="z-20 pt-2 mr-2 w-12 h-12">
+        <h1 className="flex z-20 mt-2 w-12 h-12 md:mr-2">
           <KcgLogoLink />
         </h1>
         {router.pathname === PATH.ROOT && (
-          <div className="flex items-center md:justify-center md:ml-auto">
-            <SearchInput />
+          <div className="flex items-center ml-auto md:justify-center">
+            <SearchInput
+              setIsOpen={setIsSearchModal}
+              handleClick={handleClick}
+            />
+            <SearchModal
+              isOpen={isSearchModal}
+              setIsOpen={setIsSearchModal}
+              handleClick={handleClick}
+            />
           </div>
         )}
         <div className="p-2 ml-auto">
