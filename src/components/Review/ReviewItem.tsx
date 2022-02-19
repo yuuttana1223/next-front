@@ -186,7 +186,7 @@ export const ReviewItem: VFC<Props> = (props) => {
   return (
     <div className="text-gray-900">
       <div className="overflow-hidden h-full rounded-lg border-2 shadow">
-        <h2 className="p-3 pl-6 text-lg border-b-2">
+        <h2 className="p-3 pl-6 text-lg break-all border-b-2">
           <Link
             href={
               currentUser
@@ -209,8 +209,7 @@ export const ReviewItem: VFC<Props> = (props) => {
           <div className="p-3 -mx-3 mb-3 leading-relaxed rounded-lg shadow">
             <p>
               <span className="mr-1 font-semibold">担当教員:</span>
-              <br />
-              {props.review?.teacher_name}
+              <span className="break-all">{props.review?.teacher_name}</span>
             </p>
             <p>
               <span className="mr-1 font-semibold">内容充実度:</span>
@@ -235,12 +234,12 @@ export const ReviewItem: VFC<Props> = (props) => {
           </div>
           <div
             className={`p-3 mb-3 -mx-3 leading-relaxed rounded-lg shadow ${
-              props.isEditable ? "break-words" : "truncate"
+              props.isEditable ? "break-all" : "truncate"
             }`}
           >
             <p className="font-semibold ">内容:</p>
             {currentUser ? (
-              <span>{props.review?.content}</span>
+              <span className="break-all">{props.review?.content}</span>
             ) : (
               <div>
                 <span>
@@ -275,7 +274,7 @@ export const ReviewItem: VFC<Props> = (props) => {
             </time>
             <p>
               <span className="mr-1 font-semibold text-gray-900">投稿者:</span>
-              {props.review?.username}
+              <span className="break-all">{props.review?.username}</span>
             </p>
           </div>
 
@@ -283,11 +282,11 @@ export const ReviewItem: VFC<Props> = (props) => {
             <GoodButton
               onClick={currentUser ? handleLike : pushLogin}
               count={likeState.likes?.length}
-              isLiked={likeState.isLiked}
+              isLiked={currentUser && likeState.isLiked}
             />
             <FavoriteButton
               onClick={currentUser ? handleFavorite : pushLogin}
-              isFavorite={isFavorite}
+              isFavorite={currentUser && isFavorite}
             />
           </div>
           {props.isEditable && currentUser?.id === props.review?.user_id && (
