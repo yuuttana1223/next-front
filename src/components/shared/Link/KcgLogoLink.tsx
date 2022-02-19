@@ -8,13 +8,7 @@ export const KcgLogoLink: VFC = () => {
   return (
     <Link href={PATH.ROOT}>
       <a>
-        <Image
-          src={KcgLogo}
-          alt="KCGのロゴ"
-          width="48px"
-          height="48px"
-          className="cursor-pointer"
-        />
+        <Image src={KcgLogo} alt="KCGのロゴ" width="48px" height="48px" />
       </a>
     </Link>
   );
