@@ -48,6 +48,16 @@ export const signIn = (params: SignInParams) => {
   });
 };
 
+export const signOut = () => {
+  return axios.delete(`${API_URL}/auth/sign_out`, {
+    headers: {
+      "access-token": Cookies.get("access_token") ?? "",
+      client: Cookies.get("client") ?? "",
+      uid: Cookies.get("uid") ?? "",
+    },
+  });
+};
+
 export const fetchCurrentUser = () => {
   const accessToken = Cookies.get("access_token");
   const client = Cookies.get("client");
