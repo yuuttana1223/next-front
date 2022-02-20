@@ -4,6 +4,7 @@ import { AppLayout } from "src/layouts/AppLayout";
 import { EditUser as EditUserComponent } from "src/components/User/EditUser";
 import { ProtectUserRoute } from "src/routes/ProtectUserRoute";
 import { CorrectUserRoute } from "src/routes/CorrectUserRoute";
+import { Container } from "src/layouts/Container";
 
 const EditUser: NextPage = () => {
   return (
@@ -13,8 +14,10 @@ const EditUser: NextPage = () => {
           <title>KCG Reviews</title>
           <meta name="description" content="ユーザー編集" />
         </Head>
-        <AppLayout>
-          <EditUserComponent />
+        <AppLayout className="bg-gray-100">
+          <Container>
+            <EditUserComponent />
+          </Container>
         </AppLayout>
       </CorrectUserRoute>
     </ProtectUserRoute>
