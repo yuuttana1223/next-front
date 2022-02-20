@@ -1,15 +1,38 @@
-import { ReactNode, VFC, useState } from "react";
+import { ReactNode, VFC, useState, useCallback, useContext } from "react";
 import { Header } from "src/layouts/Header";
-import { HiMenu, HiOutlineUserCircle } from "react-icons/hi";
+import { HiMenu } from "react-icons/hi";
 import { Drawer } from "src/components/Drawer";
 import { KcgLogoLink } from "src/components/shared/Link/KcgLogoLink";
 import { SearchInput } from "src/components/shared/Input/SearchInput";
 import { useRouter } from "next/router";
 import { PATH } from "src/urls/path";
+import { SettingDropDown } from "src/components/Dropdown/SettingDropDown";
+import { SearchModal } from "src/components/Modal/SearchModal";
+import { AuthContext } from "src/providers/AuthProvider";
+import { LoginLink } from "src/components/shared/Link/LoginLink";
 
-export const AppLayout: VFC<{ children: ReactNode }> = (props) => {
+type Props = {
+  children: ReactNode;
+  isSearchInput?: boolean;
+};
+
+export const AppLayout: VFC<Props> = (props) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isSearchModal, setIsSearchModal] = useState(false);
+  const { currentUser } = useContext(AuthContext);
   const router = useRouter();
+  const handleClick = useCallback(
+    (text: string) => {
+      router.push(
+        `${
+          Object.keys(router.query)[0] === "sort_by"
+            ? `${router.asPath.split("&search_query")[0]}&`
+            : `${PATH.ROOT}?`
+        }search_query=${text}`
+      );
+    },
+    [router]
+  );
   return (
     <>
       <Header>
@@ -21,21 +44,37 @@ export const AppLayout: VFC<{ children: ReactNode }> = (props) => {
             onClick={() => setIsOpen((prevIsOpen) => !prevIsOpen)}
           />
         </div>
-        <h1 className="z-20 pt-2 mr-2 w-12 h-12">
+        <h1 className="flex z-20 mt-2 w-12 h-12 md:mr-2">
           <KcgLogoLink />
         </h1>
-        {router.pathname === PATH.ROOT && (
-          <div className="flex items-center md:justify-center md:ml-auto">
-            <SearchInput />
+        {props.isSearchInput && (
+          <div className="ml-auto md:mx-auto">
+            <SearchInput
+              setIsOpen={setIsSearchModal}
+              handleClick={handleClick}
+            />
+            <SearchModal
+              isOpen={isSearchModal}
+              setIsOpen={setIsSearchModal}
+              handleClick={handleClick}
+            />
           </div>
         )}
-        <div className="p-2 ml-auto">
-          <HiOutlineUserCircle
-            title="ユーザー"
-            size="40px"
-            className="text-gray-700 cursor-pointer"
-          />
-        </div>
+
+        {currentUser ? (
+          <div className={`${props.isSearchInput ? "md:ml-0" : "ml-auto"}`}>
+            <SettingDropDown />
+          </div>
+        ) : (
+          <div
+            className={`flex mx-2 ${
+              props.isSearchInput ? "md:ml-0" : "ml-auto"
+            }`}
+          >
+            <LoginLink href={PATH.USERS.SIGN_IN}>ログイン</LoginLink>
+          </div>
+        )}
+
         <Drawer isOpen={isOpen} setIsOpen={setIsOpen} />
       </Header>
       <main>
