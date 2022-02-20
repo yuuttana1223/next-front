@@ -5,7 +5,11 @@ module.exports = {
     "src/layouts/**/*.{ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      borderWidth: {
+        1: "1px",
+      },
+    },
   },
   plugins: [],
 };
