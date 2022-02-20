@@ -3,6 +3,7 @@ import {
   HiOutlineCog,
   HiOutlineLogout,
   HiOutlineUserCircle,
+  HiOutlineUser,
 } from "react-icons/hi";
 import { Fragment, useCallback, useContext } from "react";
 import { signOut } from "src/apis/auth";
@@ -42,6 +43,10 @@ export const SettingDropDown = () => {
         leaveTo="transform opacity-0 scale-95"
       >
         <Menu.Items className="absolute right-0 z-10 py-2 w-40 bg-white rounded-md divide-y divide-gray-100 focus:outline-none ring-black/5 shadow-lg origin-top-right">
+          <p className="pb-1 pl-2 font-semibold break-all border-b-1">
+            <HiOutlineUser title="ユーザー" size="20px" className="inline" />
+            <span className="ml-2">{currentUser?.name}</span>
+          </p>
           <Menu.Item>
             {({ active }) => (
               <button
