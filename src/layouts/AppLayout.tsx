@@ -11,7 +11,12 @@ import { SearchModal } from "src/components/Modal/SearchModal";
 import { AuthContext } from "src/providers/AuthProvider";
 import { LoginLink } from "src/components/shared/Link/LoginLink";
 
-export const AppLayout: VFC<{ children: ReactNode }> = (props) => {
+type Props = {
+  children: ReactNode;
+  isSearchInput?: boolean;
+};
+
+export const AppLayout: VFC<Props> = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSearchModal, setIsSearchModal] = useState(false);
   const { currentUser } = useContext(AuthContext);
@@ -42,8 +47,8 @@ export const AppLayout: VFC<{ children: ReactNode }> = (props) => {
         <h1 className="flex z-20 mt-2 w-12 h-12 md:mr-2">
           <KcgLogoLink />
         </h1>
-        {router.pathname === PATH.ROOT && (
-          <div className="flex items-center ml-auto md:justify-center">
+        {props.isSearchInput && (
+          <div className="ml-auto md:mx-auto">
             <SearchInput
               setIsOpen={setIsSearchModal}
               handleClick={handleClick}
@@ -57,11 +62,15 @@ export const AppLayout: VFC<{ children: ReactNode }> = (props) => {
         )}
 
         {currentUser ? (
-          <div className="ml-2 md:ml-auto">
+          <div className={`${props.isSearchInput ? "md:ml-0" : "ml-auto"}`}>
             <SettingDropDown />
           </div>
         ) : (
-          <div className="flex items-center mx-2 md:ml-auto">
+          <div
+            className={`flex mx-2 ${
+              props.isSearchInput ? "md:ml-0" : "ml-auto"
+            }`}
+          >
             <LoginLink href={PATH.USERS.SIGN_IN}>ログイン</LoginLink>
           </div>
         )}

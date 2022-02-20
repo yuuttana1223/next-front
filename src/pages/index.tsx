@@ -10,7 +10,7 @@ const Home: NextPage = () => {
         <title>KCG Reviews</title>
         <meta name="description" content="授業評価一覧" />
       </Head>
-      <AppLayout>
+      <AppLayout isSearchInput>
         <Reviews />
       </AppLayout>
     </>
