@@ -8,8 +8,10 @@ import { Fragment, useCallback, useContext } from "react";
 import { signOut } from "src/apis/auth";
 import toast from "react-hot-toast";
 import { AuthContext } from "src/providers/AuthProvider";
+import Link from "next/link";
+import { PATH } from "src/urls/path";
 export const SettingDropDown = () => {
-  const { setCurrentUser } = useContext(AuthContext);
+  const { currentUser, setCurrentUser } = useContext(AuthContext);
 
   const handleClick = useCallback(() => {
     signOut()
@@ -47,8 +49,12 @@ export const SettingDropDown = () => {
                   active ? "bg-gray-200" : ""
                 }  flex w-full py-2 pl-2 text-sm text-gray-900`}
               >
-                <HiOutlineCog title="設定" size="20px" className="inline" />
-                <span className="ml-2">ユーザー編集</span>
+                <Link href={PATH.USERS.EDIT(currentUser?.id)}>
+                  <a>
+                    <HiOutlineCog title="設定" size="20px" className="inline" />
+                    <span className="ml-2">ユーザー編集</span>
+                  </a>
+                </Link>
               </button>
             )}
           </Menu.Item>
