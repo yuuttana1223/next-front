@@ -45,7 +45,7 @@ export const SignInForm: VFC = () => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
-        <h1 className="mb-8 text-3xl text-center">ログイン</h1>
+        <h1 className="mb-8 text-2xl text-center">ログイン</h1>
         <div className="my-2">
           <FloatingLabelInput
             type="email"

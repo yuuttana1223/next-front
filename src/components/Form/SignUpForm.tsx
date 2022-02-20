@@ -49,7 +49,7 @@ export const SignUpForm: VFC = () => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
-        <h1 className="text-3xl text-center md:mb-8">ユーザー登録</h1>
+        <h1 className="text-2xl text-center md:mb-8">ユーザー登録</h1>
         <div className="my-2">
           <FloatingLabelInput
             type="name"
