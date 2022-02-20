@@ -1,9 +1,10 @@
-import { VFC, useState } from "react";
+import { VFC, useState, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
 type Props = {
   type: string;
   name: string;
+  value?: string;
   placeholder: string;
   validation?: {
     required?: boolean;
@@ -15,7 +16,14 @@ type Props = {
 
 export const FloatingLabelInput: VFC<Props> = (props) => {
   const [active, setActive] = useState(false);
-  const { register } = useFormContext();
+  const { register, setValue } = useFormContext();
+
+  useEffect(() => {
+    if (props.value) {
+      setValue(props.name, props.value);
+      setActive(true);
+    }
+  }, [props.name, props.value, setValue]);
 
   return (
     <div className="mt-4">

@@ -73,3 +73,17 @@ export const fetchCurrentUser = () => {
     });
   }
 };
+
+export const patchUser = (
+  params: Pick<SignUpParams, "name">,
+  userId?: number
+) => {
+  return axios.patch<User>(`${API_URL}/users/${userId}`, {
+    "access-token": Cookies.get("access_token"),
+    client: Cookies.get("client"),
+    uid: Cookies.get("uid"),
+    user: {
+      name: params.name,
+    },
+  });
+};

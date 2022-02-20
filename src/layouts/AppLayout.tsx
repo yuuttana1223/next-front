@@ -14,6 +14,7 @@ import { LoginLink } from "src/components/shared/Link/LoginLink";
 type Props = {
   children: ReactNode;
   isSearchInput?: boolean;
+  className?: string;
 };
 
 export const AppLayout: VFC<Props> = (props) => {
@@ -77,7 +78,7 @@ export const AppLayout: VFC<Props> = (props) => {
 
         <Drawer isOpen={isOpen} setIsOpen={setIsOpen} />
       </Header>
-      <main>
+      <main className={props.className}>
         <div className="container py-24 px-5 mx-auto">{props.children}</div>
       </main>
     </>
