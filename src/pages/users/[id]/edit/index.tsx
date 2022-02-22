@@ -11,7 +11,7 @@ const EditUser: NextPage = () => {
     <ProtectUserRoute>
       <CorrectUserRoute>
         <Head>
-          <title>KCG Reviews</title>
+          <title>Edit User</title>
           <meta name="description" content="ユーザー編集" />
         </Head>
         <AppLayout className="bg-gray-100">
