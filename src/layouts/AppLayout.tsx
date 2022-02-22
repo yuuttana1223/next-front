@@ -37,6 +37,11 @@ export const AppLayout: VFC<Props> = (props) => {
   return (
     <>
       <Header>
+        <div
+          className={`fixed inset-0 z-20 w-64 h-14 md:w-72 transition-all duration-500 ease-in-out transform bg-white ${
+            isOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+        ></div>
         <div className="z-20 p-2">
           <HiMenu
             title="ハンバーガーメニュー"
