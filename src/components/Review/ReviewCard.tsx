@@ -28,7 +28,7 @@ type Props = {
   isEditable?: boolean;
 };
 
-export const ReviewItem: VFC<Props> = (props) => {
+export const ReviewCard: VFC<Props> = (props) => {
   const { currentUser } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
   const { reviews } = useAllReviews();

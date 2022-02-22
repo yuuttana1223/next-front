@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { VFC, useState, useCallback } from "react";
-import { ReviewItem } from "src/components/Review/ReviewItem";
+import { ReviewCard } from "src/components/Review/ReviewCard";
 import { Loader } from "src/components/Loader";
 import { ErrorMessage } from "src/components/Message/ErrorMessage";
 import { useRouter } from "next/router";
@@ -59,7 +59,7 @@ export const Review: VFC = () => {
 
   return (
     <div className="p-4 -m-4 mx-auto w-full md:w-3/5 lg:w-2/5">
-      <ReviewItem
+      <ReviewCard
         review={reviews!.find((review) => review.id === reviewId)!}
         isEditable
       />
