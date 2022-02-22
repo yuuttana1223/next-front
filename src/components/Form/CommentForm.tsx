@@ -115,8 +115,10 @@ export const CommentForm: VFC<Props> = (props) => {
             type="submit"
             disabled={!watch("body")}
             onClick={handleSubmit(onSubmit)}
-            className={`py-2 px-4 mr-2 mb-2 text-sm font-medium text-center text-white  ${
-              watch("body") ? "hover:bg-blue-700 bg-blue-600" : "bg-blue-500"
+            className={`py-2 px-4 mr-2 mb-2 text-sm font-medium text-center   ${
+              watch("body")
+                ? "hover:bg-blue-700 bg-blue-600 text-white"
+                : "bg-gray-200 text-gray-400"
             } rounded-sm border border-gray-300 focus:ring-4 focus:ring-blue-300 md:px-5`}
           >
             {props.comment.id ? "保存" : "コメント"}
