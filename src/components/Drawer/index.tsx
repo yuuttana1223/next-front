@@ -1,12 +1,12 @@
-import Link from "next/link";
 import { Dispatch, SetStateAction, VFC, useContext } from "react";
 import { PATH } from "src/urls/path";
-import { HiHome, HiOutlineHome } from "react-icons/hi";
+import { HiHome, HiOutlineHome, HiStar, HiOutlineStar } from "react-icons/hi";
 import { Accordion } from "src/components/Accordion";
 import { useFavoriteReviews } from "src/hooks/useFavoriteReviews";
 import { AuthContext } from "src/providers/AuthProvider";
 import { useRouter } from "next/router";
 import { LectureLink } from "src/components/shared/Link/LectureLink";
+import { SidebarTitleLink } from "src/components/shared/Link/SidebarTitleLink";
 
 type Props = {
   isOpen: boolean;
@@ -27,23 +27,31 @@ export const Drawer: VFC<Props> = (props) => {
       >
         <nav className="flex flex-col sm:flex-row sm:justify-around">
           <ul className="pr-2 w-full h-screen">
-            <li className="py-2 mt-16 border-b-2">
-              <Link href={PATH.ROOT}>
-                <a
-                  className={`flex items-center p-2 text-gray-600 rounded hover:text-gray-800 hover:bg-gray-100 transition-colors duration-200 ${
-                    router.pathname === PATH.ROOT && "bg-gray-100"
-                  }`}
-                >
-                  <div className="flex ml-3">
-                    {router.pathname === PATH.ROOT ? (
-                      <HiHome title="ホーム" size="28px" />
-                    ) : (
-                      <HiOutlineHome title="ホーム" size="28px" />
-                    )}
-                    <p className="ml-3 text-lg">ホーム</p>
-                  </div>
-                </a>
-              </Link>
+            <li className="pt-2 mt-16">
+              <SidebarTitleLink href={PATH.ROOT}>
+                <div className="flex ml-3">
+                  {router.pathname === PATH.ROOT ? (
+                    <HiHome title="ホーム" size="28px" />
+                  ) : (
+                    <HiOutlineHome title="ホーム" size="28px" />
+                  )}
+                  <p className="ml-3 text-lg">ホーム</p>
+                </div>
+              </SidebarTitleLink>
+            </li>
+
+            <li className="border-b-2">
+              <SidebarTitleLink href={PATH.USERS.FAVORITES(currentUser?.id)}>
+                <div className="flex ml-3">
+                  {router.asPath.split("?")[0] ===
+                  PATH.USERS.FAVORITES(currentUser?.id) ? (
+                    <HiStar title="お気に入り" size="28px" />
+                  ) : (
+                    <HiOutlineStar title="お気に入り" size="28px" />
+                  )}
+                  <p className="ml-3 text-lg">お気に入り</p>
+                </div>
+              </SidebarTitleLink>
             </li>
             {currentUser && (
               <li className="py-2 ml-5 text-gray-600">
