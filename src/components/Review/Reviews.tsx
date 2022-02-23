@@ -1,5 +1,5 @@
 import { VFC, useState, useEffect, useCallback } from "react";
-import { ReviewItem } from "src/components/Review/ReviewItem";
+import { ReviewCard } from "src/components/Review/ReviewCard";
 import { NewButtonLink } from "src/components/shared/Link/NewButtonLink";
 import { useAllReviews } from "src/hooks/useAllReviews";
 import { Loader } from "src/components/Loader";
@@ -97,7 +97,7 @@ export const Reviews: VFC = () => {
       <div className="flex flex-wrap -m-4">
         {selectState.reviews?.map((review) => (
           <div key={review.id} className="p-4 w-full md:w-1/2 lg:w-1/3">
-            <ReviewItem review={review} />
+            <ReviewCard review={review} />
           </div>
         ))}
       </div>

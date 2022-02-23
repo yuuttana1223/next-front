@@ -69,7 +69,7 @@ export const SettingDropDown = () => {
                 onClick={handleClick}
                 className={`${
                   active ? "bg-gray-200" : ""
-                }  flex items-center w-full py-2 pl-2 text-sm text-gray-900`}
+                } flex items-center w-full py-2 pl-2 text-sm text-gray-900`}
               >
                 <HiOutlineLogout
                   title="ログアウト"

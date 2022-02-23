@@ -22,13 +22,14 @@ import { FavoriteButton } from "src/components/shared/Button/FavoriteButton";
 import { deleteFavorite, postFavorite } from "src/apis/favorite";
 import { useAllFavorites } from "src/hooks/useAllFavorites";
 import { useAllComments } from "src/hooks/useAllComments";
+import { useFavoriteReviews } from "src/hooks/useFavoriteReviews";
 
 type Props = {
   review: Review;
   isEditable?: boolean;
 };
 
-export const ReviewItem: VFC<Props> = (props) => {
+export const ReviewCard: VFC<Props> = (props) => {
   const { currentUser } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
   const { reviews } = useAllReviews();
@@ -36,6 +37,7 @@ export const ReviewItem: VFC<Props> = (props) => {
   const { mutate } = useSWRConfig();
   const { likes } = useAllLikes();
   const { favorites } = useAllFavorites();
+  const { favoriteReviews } = useFavoriteReviews(currentUser?.id);
   const { comments } = useAllComments();
   // レビューを削除後props.reviewがundefinedになるので、props.review?にした
   const [likeState, setLikeState] = useState({
@@ -167,6 +169,10 @@ export const ReviewItem: VFC<Props> = (props) => {
           mutate(`${API_URL}/favorites`, [
             ...favorites.filter((favorite) => favorite.review_id !== reviewId),
           ]);
+          mutate(
+            `${API_URL}/users/${currentUser?.id}/favorites`,
+            favoriteReviews?.filter((review) => review.id !== reviewId)
+          );
         })
         .catch(() => {
           setIsFavorite(true);
@@ -176,12 +182,23 @@ export const ReviewItem: VFC<Props> = (props) => {
       postFavorite(reviewId)
         .then((res) => {
           mutate(`${API_URL}/favorites`, [...favorites, res.data]);
+          mutate(`${API_URL}/users/${currentUser?.id}/favorites`, [
+            ...favorites,
+            res.data,
+          ]);
         })
         .catch(() => {
           setIsFavorite(false);
         });
     }
-  }, [favorites, isFavorite, mutate, props.review]);
+  }, [
+    currentUser?.id,
+    favoriteReviews,
+    favorites,
+    isFavorite,
+    mutate,
+    props.review?.id,
+  ]);
 
   return (
     <div className="text-gray-900">

@@ -1,27 +1,24 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { AppLayout } from "src/layouts/AppLayout";
-import { EditUser as EditUserComponent } from "src/components/User/EditUser";
 import { ProtectUserRoute } from "src/routes/ProtectUserRoute";
 import { CorrectUserRoute } from "src/routes/CorrectUserRoute";
-import { Container } from "src/layouts/Container";
+import { FavoriteReviews as FavoriteReviewsComponent } from "src/components/Review/FavoriteReviews";
 
-const EditUser: NextPage = () => {
+const FavoriteReviews: NextPage = () => {
   return (
     <ProtectUserRoute>
       <CorrectUserRoute>
         <Head>
-          <title>Edit User</title>
-          <meta name="description" content="ユーザー編集" />
+          <title>Favorite Reviews</title>
+          <meta name="description" content="お気に入り一覧" />
         </Head>
-        <AppLayout className="bg-gray-100">
-          <Container>
-            <EditUserComponent />
-          </Container>
+        <AppLayout>
+          <FavoriteReviewsComponent />
         </AppLayout>
       </CorrectUserRoute>
     </ProtectUserRoute>
   );
 };
 
-export default EditUser;
+export default FavoriteReviews;
