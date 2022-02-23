@@ -10,7 +10,11 @@ export const CorrectUserRoute: VFC<{ children: ReactNode }> = (props) => {
 
   useEffect(() => {
     if (currentUser?.id !== userId) {
-      router.push(`${PATH.USERS.EDIT(currentUser?.id)}`);
+      if (router.asPath.split("?")[0] === PATH.USERS.EDIT(userId)) {
+        router.push(`${PATH.USERS.EDIT(currentUser?.id)}`);
+      } else if (router.asPath.split("?")[0] === PATH.USERS.FAVORITES(userId)) {
+        router.push(`${PATH.USERS.FAVORITES(currentUser?.id)}`);
+      }
     }
   }, [currentUser, router, userId]);
 
