@@ -10,7 +10,7 @@ const FavoriteReviews: NextPage = () => {
     <ProtectUserRoute>
       <CorrectUserRoute>
         <Head>
-          <title>Favorite User</title>
+          <title>Favorite Reviews</title>
           <meta name="description" content="お気に入り一覧" />
         </Head>
         <AppLayout>
