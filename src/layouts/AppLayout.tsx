@@ -27,7 +27,7 @@ export const AppLayout: VFC<Props> = (props) => {
       router.push(
         `${
           Object.keys(router.query)[0] === "sort_by"
-            ? `${router.asPath.split("&search_query")[0]}&`
+            ? `${router.asPath.split("&page=")[0].split("&search_query")[0]}&`
             : `${PATH.ROOT}?`
         }search_query=${text}`
       );
