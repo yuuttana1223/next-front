@@ -1,4 +1,4 @@
-import { VFC, useState, useEffect, useCallback } from "react";
+import { VFC, useState, useEffect, useCallback, useMemo } from "react";
 import { ReviewCard } from "src/components/Review/ReviewCard";
 import { NewButtonLink } from "src/components/shared/Link/NewButtonLink";
 import { useAllReviews } from "src/hooks/useAllReviews";
@@ -10,11 +10,15 @@ import { useAllFavorites } from "src/hooks/useAllFavorites";
 import { SortSelect } from "src/components/shared/Select/SortSelect";
 import { fetchReviews, selects, Review, SelectType } from "src/apis/review";
 import { useRouter } from "next/router";
+import { PATH } from "src/urls/path";
+import { Pagination } from "src/components/Pagination";
 
 export type SelectStateType = {
   reviews?: Review[];
   select?: SelectType;
 };
+
+const PER_PAGE = 12;
 
 export const Reviews: VFC = () => {
   const { reviews, reviewsError, reviewsLoading } = useAllReviews();
@@ -26,12 +30,55 @@ export const Reviews: VFC = () => {
     select: selects[0],
   });
   const router = useRouter();
+  const currentPage = useMemo(
+    () => (router.query.page ? Number(router.query.page) : 1),
+    [router.query.page]
+  );
+
+  // パラメータが複数の場合も考慮するため?と&を区別
+  const queryParams = useMemo(
+    () =>
+      router.asPath.split("?page")[0] === PATH.ROOT
+        ? "?"
+        : `${router.asPath.split("&page")[0]}&`,
+    [router.asPath]
+  );
+
+  const handleNextPage = useCallback(() => {
+    if (
+      !selectState ||
+      !selectState.reviews ||
+      selectState.reviews.length <= currentPage * PER_PAGE
+    ) {
+      return;
+    }
+    router.push(`${queryParams}page=${currentPage + 1}`);
+  }, [currentPage, queryParams, router, selectState]);
+
+  const handleBackPage = useCallback(() => {
+    if (currentPage <= 1) {
+      return;
+    }
+    router.push(`${queryParams}page=${currentPage - 1}`);
+  }, [currentPage, queryParams, router]);
+
   const sortSelect = useCallback((reviews: Review[], select?: SelectType) => {
     setSelectState({
       reviews,
       select,
     });
   }, []);
+
+  // 1ページあたりのレビューを取得
+  const separatePage = useCallback(
+    (reviews?: Review[]) => {
+      return reviews?.slice(
+        currentPage === 1 ? 0 : (currentPage - 1) * PER_PAGE,
+        currentPage * PER_PAGE
+      );
+    },
+    [currentPage]
+  );
 
   useEffect(() => {
     if (router.query.sort_by || router.query.search_query) {
@@ -95,11 +142,24 @@ export const Reviews: VFC = () => {
         <NewButtonLink />
       </div>
       <div className="flex flex-wrap -m-4">
-        {selectState.reviews?.map((review) => (
+        {separatePage(selectState.reviews)?.map((review) => (
           <div key={review.id} className="p-4 w-full md:w-1/2 lg:w-1/3">
             <ReviewCard review={review} />
           </div>
         ))}
+      </div>
+      <div className="mt-10">
+        <Pagination
+          pageCount={
+            selectState.reviews
+              ? Math.ceil(selectState.reviews?.length / PER_PAGE)
+              : 1
+          }
+          currentPage={currentPage}
+          queryParams={queryParams}
+          handleBackPage={handleBackPage}
+          handleNextPage={handleNextPage}
+        />
       </div>
     </div>
   );
