@@ -13,6 +13,8 @@ type Props = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
+const displayLimit = 7;
+
 export const Drawer: VFC<Props> = (props) => {
   const router = useRouter();
   const { currentUser } = useContext(AuthContext);
@@ -57,12 +59,15 @@ export const Drawer: VFC<Props> = (props) => {
               <li className="py-2 ml-5 text-gray-600">
                 <h2 className="py-2 text-gray-800">お気に入り</h2>
                 <ul>
-                  {favoriteReviews?.slice(0, 7).map((review) => (
+                  {favoriteReviews?.slice(0, displayLimit).map((review) => (
                     <LectureLink key={review.id} review={review} />
                   ))}
                 </ul>
                 <Accordion
-                  reviews={favoriteReviews?.slice(7, favoriteReviews.length)}
+                  reviews={favoriteReviews?.slice(
+                    displayLimit,
+                    favoriteReviews.length
+                  )}
                 />
               </li>
             )}
