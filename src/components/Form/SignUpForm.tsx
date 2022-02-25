@@ -90,18 +90,6 @@ export const SignUpForm: VFC = () => {
             <ErrorMessage message="8以上25以下の英数字を入力してください" />
           )}
         </div>
-        <div className="my-2">
-          <FloatingLabelInput
-            type="password"
-            name="password_confirmation"
-            placeholder="パスワード確認"
-            validation={{ required: true, minLength: 8, maxLength: 25 }}
-          />
-          {methods.control._formValues["password"] !==
-            methods.control._formValues["password_confirmation"] && (
-            <ErrorMessage message="パスワードが一致していません" />
-          )}
-        </div>
         <div className="mt-4">
           <Button className="w-full">登録</Button>
         </div>

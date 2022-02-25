@@ -37,7 +37,6 @@ export const signUp = (params: SignUpParams) => {
     name: params.name,
     email: params.email,
     password: params.password,
-    password_confirmation: params.password_confirmation,
   });
 };
 
