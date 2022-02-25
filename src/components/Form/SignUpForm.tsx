@@ -1,4 +1,4 @@
-import { VFC, useContext } from "react";
+import { VFC, useContext, useRef } from "react";
 import { Button } from "src/components/shared/Button";
 import { FloatingLabelInput } from "src/components/shared/Input/FloatingLabelInput";
 import { Maybe } from "src/components/Message/Maybe";
@@ -11,6 +11,7 @@ import Cookies from "js-cookie";
 import { AuthContext } from "src/providers/AuthProvider";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
+import { ProcessingLoader } from "src/components/Loader/ProcessingLoader";
 
 type Inputs = {
   name: string;
@@ -22,12 +23,14 @@ type Inputs = {
 export const SignUpForm: VFC = () => {
   const { setCurrentUser } = useContext(AuthContext);
   const router = useRouter();
-
+  const processing = useRef(false);
   const methods = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = (params) => {
+    processing.current = true;
     signUp(params)
       .then((res) => {
+        processing.current = false;
         if (res.status === 200) {
           Cookies.set("access_token", res.headers["access-token"]);
           Cookies.set("client", res.headers["client"]);
@@ -94,7 +97,16 @@ export const SignUpForm: VFC = () => {
           )}
         </div>
         <div className="mt-4">
-          <Button className="w-full">登録</Button>
+          {processing.current ? (
+            <Button type="button" className="w-full">
+              <ProcessingLoader />
+              登録中...
+            </Button>
+          ) : (
+            <Button type="submit" className="w-full">
+              登録
+            </Button>
+          )}
         </div>
         <Maybe
           link={{
