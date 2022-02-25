@@ -9,6 +9,7 @@ type Props = {
   labelName: string;
   isOther?: boolean;
   selected?: string;
+  placeholder?: string;
   validation?: {
     required?: boolean;
     minLength?: number;
@@ -61,7 +62,11 @@ export const Select: VFC<Props> = (props) => {
       </div>
       {props.isOther && selected === "その他" && (
         <div className="my-2">
-          <OtherInput name={props.name} validation={props.validation} />
+          <OtherInput
+            name={props.name}
+            validation={props.validation}
+            placeholder={props.placeholder}
+          />
         </div>
       )}
     </div>

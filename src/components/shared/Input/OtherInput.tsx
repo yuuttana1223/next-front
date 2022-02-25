@@ -4,6 +4,7 @@ import { ErrorMessage } from "src/components/Message/ErrorMessage";
 
 type Props = {
   name: string;
+  placeholder?: string;
   validation?: {
     minLength?: number;
     maxLength?: number;
@@ -33,8 +34,9 @@ export const OtherInput: VFC<Props> = (props) => {
         {...register(`${props.name}2`, props.validation)}
         type="text"
         value={selected}
+        placeholder={props.placeholder}
         onChange={(e) => setSelected(e.target.value.trim())}
-        className="p-1 w-full rounded border-2 outline-none shadow-sm"
+        className="py-1 px-2 w-full rounded border-2 outline-none shadow-sm"
       />
     </label>
   );

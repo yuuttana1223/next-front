@@ -84,6 +84,7 @@ export const ReviewForm: VFC<Props> = (props) => {
               name="lecture_name"
               validation={{ required: true, minLength: 2, maxLength: 25 }}
               labelName="講義名"
+              placeholder="例. Java実習1"
               texts={lectures}
               selected={props.review?.lecture_name}
               isOther
@@ -93,6 +94,7 @@ export const ReviewForm: VFC<Props> = (props) => {
               name="teacher_name"
               validation={{ required: true, minLength: 2, maxLength: 25 }}
               labelName="担当教員"
+              placeholder="例. 前納一希"
               texts={teachers}
               selected={props.review?.teacher_name}
               isOther
