@@ -1,12 +1,19 @@
 import { Dispatch, SetStateAction, VFC, useContext } from "react";
 import { PATH } from "src/urls/path";
-import { HiHome, HiOutlineHome, HiStar, HiOutlineStar } from "react-icons/hi";
+import {
+  HiHome,
+  HiOutlineHome,
+  HiStar,
+  HiOutlineStar,
+  HiOutlineMail,
+} from "react-icons/hi";
 import { Accordion } from "src/components/Accordion";
 import { useFavoriteReviews } from "src/hooks/useFavoriteReviews";
 import { AuthContext } from "src/providers/AuthProvider";
 import { useRouter } from "next/router";
 import { LectureLink } from "src/components/shared/Link/LectureLink";
 import { SidebarTitleLink } from "src/components/shared/Link/SidebarTitleLink";
+import { ExternalLink } from "src/components/shared/Link/ExternalLink";
 
 type Props = {
   isOpen: boolean;
@@ -56,21 +63,51 @@ export const Drawer: VFC<Props> = (props) => {
               </SidebarTitleLink>
             </li>
             {currentUser && (
-              <li className="py-2 ml-5 text-gray-600">
-                <h2 className="py-2 text-gray-800">お気に入り</h2>
-                <ul>
-                  {favoriteReviews?.slice(0, displayLimit).map((review) => (
-                    <LectureLink key={review.id} review={review} />
-                  ))}
-                </ul>
-                <Accordion
-                  reviews={favoriteReviews?.slice(
-                    displayLimit,
-                    favoriteReviews.length
-                  )}
-                />
+              <li className=" text-gray-600 border-b-2">
+                <div className="py-2 ml-5">
+                  <h2 className="py-2 text-gray-800">お気に入り</h2>
+                  <ul>
+                    {favoriteReviews?.slice(0, displayLimit).map((review) => (
+                      <LectureLink key={review.id} review={review} />
+                    ))}
+                  </ul>
+                  <Accordion
+                    reviews={favoriteReviews?.slice(
+                      displayLimit,
+                      favoriteReviews.length
+                    )}
+                  />
+                </div>
               </li>
             )}
+            <li className="py-2 ml-5 text-gray-600">
+              <h2 className="py-2 text-gray-800">KCG関連の他のサービス</h2>
+              <ul>
+                <li>
+                  <ExternalLink href="https://kcg-community.herokuapp.com/">
+                    kcg-community
+                  </ExternalLink>
+                </li>
+                <li>
+                  <ExternalLink href="https://king.kcg.kyoto/campus/Portal/Home">
+                    KING-LMS
+                  </ExternalLink>
+                </li>
+                <li>
+                  <ExternalLink href="https://www.kcg.ac.jp/?gclid=CjwKCAiA9tyQBhAIEiwA6tdCrHxjY2531aGsYTIExqLCU2khXvGiu5nqCyyKe9t9oZAQnaTLQWm-5BoC6wgQAvD_BwE">
+                    KCGのホームページ
+                  </ExternalLink>
+                </li>
+              </ul>
+              <p className="-ml-4 border-t-2">
+                <ExternalLink href="https://forms.gle/fJV3AtQK4YXrsJqm7">
+                  <HiOutlineMail size="24px" className="inline mx-2" />
+                  <span className="text-gray-600 align-bottom">
+                    お問い合わせ
+                  </span>
+                </ExternalLink>
+              </p>
+            </li>
           </ul>
         </nav>
       </section>
