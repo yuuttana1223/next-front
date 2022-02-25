@@ -6,7 +6,9 @@ type Props = {
 
 export const ErrorMessage: VFC<Props> = (props) => {
   return (
-    <p className={`mt-1 text-xs text-red-400 break-words ${props.className}`}>
+    <p
+      className={`mt-1 text-xs font-semibold text-red-400 break-words ${props.className}`}
+    >
       {props.message}
     </p>
   );
