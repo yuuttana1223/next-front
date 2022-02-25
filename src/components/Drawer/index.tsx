@@ -50,7 +50,13 @@ export const Drawer: VFC<Props> = (props) => {
             </li>
 
             <li className="border-b-2">
-              <SidebarTitleLink href={PATH.USERS.FAVORITES(currentUser?.id)}>
+              <SidebarTitleLink
+                href={
+                  currentUser
+                    ? PATH.USERS.FAVORITES(currentUser.id)
+                    : PATH.USERS.SIGN_IN
+                }
+              >
                 <div className="flex ml-3">
                   {router.asPath.split("?")[0] ===
                   PATH.USERS.FAVORITES(currentUser?.id) ? (
