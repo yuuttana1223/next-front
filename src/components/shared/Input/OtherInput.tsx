@@ -33,7 +33,7 @@ export const OtherInput: VFC<Props> = (props) => {
         {...register(`${props.name}2`, props.validation)}
         type="text"
         value={selected}
-        onChange={(e) => setSelected(e.target.value)}
+        onChange={(e) => setSelected(e.target.value.trim())}
         className="p-1 w-full rounded border-2 outline-none shadow-sm"
       />
     </label>

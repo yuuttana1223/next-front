@@ -2,6 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { FormValues } from "src/components/Form/ReviewForm";
 import { API_URL } from "src/urls/api";
+import { convertToHalfWidth } from "src/utils/char";
 
 export type Review = {
   id: number;
@@ -130,8 +131,12 @@ export const postReview = (params: FormValues) => {
     client: Cookies.get("client"),
     uid: Cookies.get("uid"),
     review: {
-      lecture_name: params.lecture_name2 ?? params.lecture_name,
-      teacher_name: params.teacher_name2 ?? params.teacher_name,
+      lecture_name: convertToHalfWidth(
+        params.lecture_name2 ?? params.lecture_name
+      ).trim(),
+      teacher_name: convertToHalfWidth(
+        params.teacher_name2 ?? params.teacher_name
+      ).trim(),
       lesson_type: params.lesson_type,
       level_of_satisfaction: params.level_of_satisfaction,
       workload: params.workload,
@@ -148,12 +153,12 @@ export const patchReview = (params: FormValues, reviewId?: number) => {
     client: Cookies.get("client"),
     uid: Cookies.get("uid"),
     review: {
-      lecture_name: params.lecture_name2
-        ? params.lecture_name2
-        : params.lecture_name,
-      teacher_name: params.teacher_name2
-        ? params.teacher_name2
-        : params.teacher_name,
+      lecture_name: convertToHalfWidth(
+        params.lecture_name2 ? params.lecture_name2 : params.lecture_name
+      ).trim(),
+      teacher_name: convertToHalfWidth(
+        params.teacher_name2 ? params.teacher_name2 : params.teacher_name
+      ).trim(),
       lesson_type: params.lesson_type,
       level_of_satisfaction: params.level_of_satisfaction,
       workload: params.workload,
