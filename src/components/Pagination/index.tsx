@@ -27,6 +27,7 @@ export const Pagination: VFC<Props> = (props) => {
       forcePage={props.currentPage - 1}
       pageCount={props.pageCount}
       breakLabel="..."
+      breakLinkClassName="block py-2 px-4 hover:bg-gray-100 rounded"
       previousLabel={<HiOutlineChevronLeft size="24px" />}
       previousLinkClassName="block  hover:bg-gray-100 p-2 mr-4"
       nextLabel={<HiOutlineChevronRight size="24px" />}
