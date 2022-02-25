@@ -52,9 +52,10 @@ export const SignUpForm: VFC = () => {
         <h1 className="text-2xl text-center md:mb-8">ユーザー登録</h1>
         <div className="my-2">
           <FloatingLabelInput
-            type="name"
+            type="text"
             name="name"
             placeholder="名前"
+            autocomplete="on"
             validation={{ required: true, minLength: 2, maxLength: 20 }}
           />
           {methods.formState.errors.name && (
@@ -66,6 +67,7 @@ export const SignUpForm: VFC = () => {
             type="email"
             name="email"
             placeholder="メールアドレス"
+            autocomplete="username"
             validation={{
               pattern: reg,
               required: true,
@@ -80,6 +82,7 @@ export const SignUpForm: VFC = () => {
             type="password"
             name="password"
             placeholder="パスワード"
+            autocomplete="new-password"
             validation={{ required: true, minLength: 8, maxLength: 25 }}
           />
           <p className="my-2 text-xs text-gray-400">

@@ -51,6 +51,7 @@ export const SignInForm: VFC = () => {
             type="email"
             name="email"
             placeholder="メールアドレス"
+            autocomplete="username"
             validation={{
               pattern: reg,
               required: true,
@@ -65,6 +66,7 @@ export const SignInForm: VFC = () => {
             type="password"
             name="password"
             placeholder="パスワード"
+            autocomplete="current-password"
             validation={{ required: true, minLength: 8, maxLength: 25 }}
           />
           <p className="my-2 text-xs text-gray-400">
