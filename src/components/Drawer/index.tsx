@@ -50,7 +50,13 @@ export const Drawer: VFC<Props> = (props) => {
             </li>
 
             <li className="border-b-2">
-              <SidebarTitleLink href={PATH.USERS.FAVORITES(currentUser?.id)}>
+              <SidebarTitleLink
+                href={
+                  currentUser
+                    ? PATH.USERS.FAVORITES(currentUser.id)
+                    : PATH.USERS.SIGN_IN
+                }
+              >
                 <div className="flex ml-3">
                   {router.asPath.split("?")[0] ===
                   PATH.USERS.FAVORITES(currentUser?.id) ? (
@@ -65,7 +71,7 @@ export const Drawer: VFC<Props> = (props) => {
             {currentUser && (
               <li className=" text-gray-600 border-b-2">
                 <div className="py-2 ml-5">
-                  <h2 className="py-2 text-gray-800">お気に入り</h2>
+                  <p className="py-2 text-lg text-gray-800">お気に入り</p>
                   <ul>
                     {favoriteReviews?.slice(0, displayLimit).map((review) => (
                       <LectureLink key={review.id} review={review} />
@@ -81,8 +87,10 @@ export const Drawer: VFC<Props> = (props) => {
               </li>
             )}
             <li className="py-2 ml-5 text-gray-600">
-              <h2 className="py-2 text-gray-800">KCG関連の他のサービス</h2>
-              <ul>
+              <p className="py-2 text-lg text-gray-800">
+                KCG関連の他のサービス
+              </p>
+              <ul className="mb-2">
                 <li>
                   <ExternalLink href="https://kcg-community.herokuapp.com/">
                     kcg-community
@@ -99,10 +107,10 @@ export const Drawer: VFC<Props> = (props) => {
                   </ExternalLink>
                 </li>
               </ul>
-              <p className="-ml-4 border-t-2">
+              <p className="-ml-4 rounded border-t-2">
                 <ExternalLink href="https://forms.gle/fJV3AtQK4YXrsJqm7">
-                  <HiOutlineMail size="24px" className="inline mx-2" />
-                  <span className="text-gray-600 align-bottom">
+                  <HiOutlineMail size="28px" className="inline mx-2" />
+                  <span className="text-lg text-gray-600 align-bottom">
                     お問い合わせ
                   </span>
                 </ExternalLink>

@@ -1,4 +1,11 @@
-import { VFC, useState, useEffect, useCallback, useMemo } from "react";
+import {
+  VFC,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useContext,
+} from "react";
 import { ReviewCard } from "src/components/Review/ReviewCard";
 import { NewButtonLink } from "src/components/shared/Link/NewButtonLink";
 import { useAllReviews } from "src/hooks/useAllReviews";
@@ -12,6 +19,7 @@ import { fetchReviews, selects, Review, SelectType } from "src/apis/review";
 import { useRouter } from "next/router";
 import { PATH } from "src/urls/path";
 import { Pagination } from "src/components/Pagination";
+import { AuthContext } from "src/providers/AuthProvider";
 
 export type SelectStateType = {
   reviews?: Review[];
@@ -25,6 +33,7 @@ export const Reviews: VFC = () => {
   const { likesError, likesLoading } = useAllLikes();
   const { commentsError, commentsLoading } = useAllComments();
   const { favoritesError, favoritesLoading } = useAllFavorites();
+  const { currentUser } = useContext(AuthContext);
   const [selectState, setSelectState] = useState<SelectStateType>({
     reviews,
     select: selects[0],
@@ -137,16 +146,25 @@ export const Reviews: VFC = () => {
           state={selectState}
           sortSelect={sortSelect}
         />
+        {!selectState.reviews?.length && (
+          <p className="mt-10 text-gray-900">
+            該当するレビューが見つかりません
+          </p>
+        )}
       </div>
       <div className="fixed right-6 bottom-6 md:right-10 md:bottom-10">
-        <NewButtonLink />
+        <NewButtonLink
+          href={currentUser ? PATH.REVIEWS.NEW : PATH.USERS.SIGN_IN}
+        />
       </div>
       <div className="flex flex-wrap -m-4">
-        {separatePage(selectState.reviews)?.map((review) => (
-          <div key={review.id} className="p-4 w-full md:w-1/2 lg:w-1/3">
-            <ReviewCard review={review} />
-          </div>
-        ))}
+        {selectState.reviews?.length
+          ? separatePage(selectState.reviews)?.map((review) => (
+              <div key={review.id} className="p-4 w-full md:w-1/2 lg:w-1/3">
+                <ReviewCard review={review} />
+              </div>
+            ))
+          : ""}
       </div>
       <div className="mt-10">
         <Pagination
