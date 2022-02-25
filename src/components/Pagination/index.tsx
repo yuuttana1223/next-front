@@ -21,6 +21,10 @@ export const Pagination: VFC<Props> = (props) => {
     [props.queryParams, router]
   );
 
+  if (props.pageCount === 0) {
+    return <></>;
+  }
+
   return (
     <ReactPaginate
       onPageChange={(e) => handleClickPageNumber(e.selected + 1)}

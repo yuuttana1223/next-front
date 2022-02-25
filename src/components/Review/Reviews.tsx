@@ -146,6 +146,11 @@ export const Reviews: VFC = () => {
           state={selectState}
           sortSelect={sortSelect}
         />
+        {!selectState.reviews?.length && (
+          <p className="mt-10 text-gray-900">
+            該当するレビューが見つかりません
+          </p>
+        )}
       </div>
       <div className="fixed right-6 bottom-6 md:right-10 md:bottom-10">
         <NewButtonLink
@@ -153,11 +158,13 @@ export const Reviews: VFC = () => {
         />
       </div>
       <div className="flex flex-wrap -m-4">
-        {separatePage(selectState.reviews)?.map((review) => (
-          <div key={review.id} className="p-4 w-full md:w-1/2 lg:w-1/3">
-            <ReviewCard review={review} />
-          </div>
-        ))}
+        {selectState.reviews?.length
+          ? separatePage(selectState.reviews)?.map((review) => (
+              <div key={review.id} className="p-4 w-full md:w-1/2 lg:w-1/3">
+                <ReviewCard review={review} />
+              </div>
+            ))
+          : ""}
       </div>
       <div className="mt-10">
         <Pagination
