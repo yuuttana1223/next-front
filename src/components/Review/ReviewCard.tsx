@@ -158,21 +158,27 @@ export const ReviewCard: VFC<Props> = (props) => {
   ]);
 
   const handleFavorite = useCallback(() => {
-    if (!favorites) {
+    if (!favorites || !favoriteReviews) {
       return;
     }
     const reviewId = props.review?.id;
     if (isFavorite) {
       setIsFavorite(false);
       deleteFavorite(reviewId)
-        .then(() => {
-          mutate(`${API_URL}/favorites`, [
-            ...favorites.filter((favorite) => favorite.review_id !== reviewId),
-          ]);
-          mutate(
-            `${API_URL}/users/${currentUser?.id}/favorites`,
-            favoriteReviews?.filter((review) => review.id !== reviewId)
-          );
+        .then((res) => {
+          if (res.status === 204) {
+            mutate(`${API_URL}/favorites`, [
+              ...favorites.filter(
+                (favorite) => favorite.review_id !== reviewId
+              ),
+            ]);
+            mutate(
+              `${API_URL}/users/${currentUser?.id}/favorites`,
+              favoriteReviews?.filter((review) => review.id !== reviewId)
+            );
+          } else {
+            setIsFavorite(true);
+          }
         })
         .catch(() => {
           setIsFavorite(true);
@@ -181,11 +187,15 @@ export const ReviewCard: VFC<Props> = (props) => {
       setIsFavorite(true);
       postFavorite(reviewId)
         .then((res) => {
-          mutate(`${API_URL}/favorites`, [...favorites, res.data]);
-          mutate(`${API_URL}/users/${currentUser?.id}/favorites`, [
-            ...favorites,
-            res.data,
-          ]);
+          if (res.status === 201) {
+            mutate(`${API_URL}/favorites`, [...favorites, res.data]);
+            mutate(`${API_URL}/users/${currentUser?.id}/favorites`, [
+              ...favoriteReviews,
+              props.review,
+            ]);
+          } else {
+            setIsFavorite(false);
+          }
         })
         .catch(() => {
           setIsFavorite(false);
