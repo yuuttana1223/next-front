@@ -1,4 +1,4 @@
-import { VFC, useContext, useRef } from "react";
+import { VFC, useContext, useState } from "react";
 import { Button } from "src/components/shared/Button";
 import { FloatingLabelInput } from "src/components/shared/Input/FloatingLabelInput";
 import { Maybe } from "src/components/Message/Maybe";
@@ -22,19 +22,16 @@ export const SignInForm: VFC = () => {
   const { setCurrentUser } = useContext(AuthContext);
   const router = useRouter();
   const methods = useForm<Inputs>();
-  const processing = useRef(false);
+  const [processing, setProcessing] = useState(false);
   const onSubmit: SubmitHandler<Inputs> = (params) => {
-    processing.current = true;
+    setProcessing(true);
     signIn(params)
       .then((res) => {
-        processing.current = false;
         if (res.status === 200) {
           Cookies.set("access_token", res.headers["access-token"]);
           Cookies.set("client", res.headers["client"]);
           Cookies.set("uid", res.headers["uid"]);
-          toast.success("ログインに成功しました", {
-            duration: 10000,
-          });
+          toast.success("ログインに成功しました");
           setCurrentUser(res.data.data);
           router.push(PATH.ROOT);
         } else {
@@ -43,6 +40,9 @@ export const SignInForm: VFC = () => {
       })
       .catch(() => {
         toast.error("ログインに失敗しました");
+      })
+      .finally(() => {
+        setProcessing(false);
       });
   };
 
@@ -81,9 +81,9 @@ export const SignInForm: VFC = () => {
           )}
         </div>
         <div className="mt-4">
-          {processing.current ? (
+          {processing ? (
             <Button type="submit" className="w-full">
-              <ProcessingLoader />
+              <ProcessingLoader className="mr-3 -ml-7" />
               送信中...
             </Button>
           ) : (
