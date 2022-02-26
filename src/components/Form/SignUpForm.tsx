@@ -1,4 +1,4 @@
-import { VFC, useContext } from "react";
+import { VFC, useContext, useState } from "react";
 import { Button } from "src/components/shared/Button";
 import { FloatingLabelInput } from "src/components/shared/Input/FloatingLabelInput";
 import { Maybe } from "src/components/Message/Maybe";
@@ -11,6 +11,7 @@ import Cookies from "js-cookie";
 import { AuthContext } from "src/providers/AuthProvider";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
+import { ProcessingLoader } from "src/components/Loader/ProcessingLoader";
 
 type Inputs = {
   name: string;
@@ -22,12 +23,14 @@ type Inputs = {
 export const SignUpForm: VFC = () => {
   const { setCurrentUser } = useContext(AuthContext);
   const router = useRouter();
-
+  const [processing, setProcessing] = useState(false);
   const methods = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = (params) => {
+    setProcessing(true);
     signUp(params)
       .then((res) => {
+        setProcessing(false);
         if (res.status === 200) {
           Cookies.set("access_token", res.headers["access-token"]);
           Cookies.set("client", res.headers["client"]);
@@ -52,9 +55,10 @@ export const SignUpForm: VFC = () => {
         <h1 className="text-2xl text-center md:mb-8">ユーザー登録</h1>
         <div className="my-2">
           <FloatingLabelInput
-            type="name"
+            type="text"
             name="name"
             placeholder="名前"
+            autocomplete="on"
             validation={{ required: true, minLength: 2, maxLength: 20 }}
           />
           {methods.formState.errors.name && (
@@ -66,6 +70,7 @@ export const SignUpForm: VFC = () => {
             type="email"
             name="email"
             placeholder="メールアドレス"
+            autocomplete="username"
             validation={{
               pattern: reg,
               required: true,
@@ -80,6 +85,7 @@ export const SignUpForm: VFC = () => {
             type="password"
             name="password"
             placeholder="パスワード"
+            autocomplete="new-password"
             validation={{ required: true, minLength: 8, maxLength: 25 }}
           />
           <p className="my-2 text-xs text-gray-400">
@@ -90,20 +96,17 @@ export const SignUpForm: VFC = () => {
             <ErrorMessage message="8以上25以下の英数字を入力してください" />
           )}
         </div>
-        <div className="my-2">
-          <FloatingLabelInput
-            type="password"
-            name="password_confirmation"
-            placeholder="パスワード確認"
-            validation={{ required: true, minLength: 8, maxLength: 25 }}
-          />
-          {methods.control._formValues["password"] !==
-            methods.control._formValues["password_confirmation"] && (
-            <ErrorMessage message="パスワードが一致していません" />
-          )}
-        </div>
         <div className="mt-4">
-          <Button className="w-full">登録</Button>
+          {processing ? (
+            <Button type="button" className="w-full">
+              <ProcessingLoader className="mr-3 -ml-7" />
+              登録中...
+            </Button>
+          ) : (
+            <Button type="submit" className="w-full">
+              登録
+            </Button>
+          )}
         </div>
         <Maybe
           link={{

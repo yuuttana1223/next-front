@@ -16,9 +16,13 @@ export const SettingDropDown = () => {
 
   const handleClick = useCallback(() => {
     signOut()
-      .then(() => {
-        setCurrentUser(undefined);
-        toast.success("ログアウトしました");
+      .then((res) => {
+        if (res.status === 200) {
+          setCurrentUser(undefined);
+          toast.success("ログアウトしました");
+        } else {
+          toast.error("ログアウトに失敗しました");
+        }
       })
       .catch(() => {
         toast.error("ログアウトに失敗しました");
@@ -26,7 +30,7 @@ export const SettingDropDown = () => {
   }, [setCurrentUser]);
   return (
     <Menu as="div">
-      <Menu.Button className="block p-1 active:bg-gray-200 rounded-full border-2 border-white outline-none">
+      <Menu.Button className="block p-1 active:bg-gray-200 rounded-full outline-none">
         <HiOutlineUserCircle
           title="ユーザー"
           size="40px"

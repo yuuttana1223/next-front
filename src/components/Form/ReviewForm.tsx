@@ -1,4 +1,4 @@
-import { VFC } from "react";
+import { VFC, useState } from "react";
 import { useAllReviews } from "src/hooks/useAllReviews";
 import { Select } from "src/components/shared/Select";
 import { RadioButton } from "src/components/shared/Radio/RadioButton";
@@ -14,6 +14,7 @@ import { API_URL } from "src/urls/api";
 import toast from "react-hot-toast";
 import { Loader } from "src/components/Loader";
 import { ErrorMessage } from "src/components/Message/ErrorMessage";
+import { ProcessingLoader } from "src/components/Loader/ProcessingLoader";
 
 export type FormValues = Omit<Review, "id" | "created_at" | "updated_at"> & {
   lecture_name2?: string;
@@ -30,33 +31,44 @@ export const ReviewForm: VFC<Props> = (props) => {
 
   const methods = useForm<FormValues>();
   const router = useRouter();
+  const [processing, setProcessing] = useState(false);
   const { mutate } = useSWRConfig();
   const onSubmit: SubmitHandler<FormValues> = (params) => {
+    setProcessing(true);
     if (props.review) {
       patchReview(params, props.review.id)
         .then((res) => {
-          mutate(
-            `${API_URL}/reviews`,
-            reviews?.map((review) =>
-              review.id === res.data.id ? res.data : review
-            )
-          );
-          toast.success("レビューを更新しました", {
-            duration: 10000,
-          });
-          router.push(PATH.REVIEWS.SHOW(res.data.id));
+          if (res.status === 200) {
+            mutate(
+              `${API_URL}/reviews`,
+              reviews?.map((review) =>
+                review.id === res.data.id ? res.data : review
+              )
+            );
+            toast.success("レビューを更新しました");
+            router.push(PATH.REVIEWS.SHOW(res.data.id));
+          } else {
+            toast.error("レビューの更新に失敗しました");
+          }
         })
         .catch(() => {
-          toast.error("レビュー編集に失敗しました");
+          toast.error("レビュー更新に失敗しました");
+        })
+        .finally(() => {
+          setProcessing(false);
         });
     } else {
       postReview(params)
         .then((res) => {
-          mutate(`${API_URL}/reviews`, [{ ...reviews }, res.data]);
-          toast.success("レビューを作成しました", {
-            duration: 10000,
-          });
-          router.push(PATH.REVIEWS.SHOW(res.data.id));
+          if (res.status === 201) {
+            mutate(`${API_URL}/reviews`, [{ ...reviews }, res.data]);
+            toast.success("レビューを作成しました", {
+              duration: 10000,
+            });
+            router.push(PATH.REVIEWS.SHOW(res.data.id));
+          } else {
+            toast.error("レビューの作成に失敗しました");
+          }
         })
         .catch(() => {
           toast.error("レビュー作成に失敗しました");
@@ -150,7 +162,16 @@ export const ReviewForm: VFC<Props> = (props) => {
               validation={{ required: true, maxLength: 500 }}
               selected={props.review?.content}
             />
-            <Button className="ml-auto w-20">送信</Button>
+            {processing ? (
+              <Button type="button" disabled className="ml-auto w-24">
+                <ProcessingLoader />
+                <span>送信中...</span>
+              </Button>
+            ) : (
+              <Button type="submit" className="ml-auto w-24">
+                <span>送信</span>
+              </Button>
+            )}
           </div>
         </div>
       </form>

@@ -48,12 +48,14 @@ export const CommentList: VFC<Props> = (props) => {
     (commentId?: number) => {
       closeModal();
       deleteComment(reviewId, commentId)
-        .then(() => {
-          mutate(
-            `${API_URL}/comments`,
-            comments?.filter((comment) => comment.id !== commentId)
-          );
-          toast.success("コメントを削除しました");
+        .then((res) => {
+          if (res.status === 204) {
+            mutate(
+              `${API_URL}/comments`,
+              comments?.filter((comment) => comment.id !== commentId)
+            );
+            toast.success("コメントを削除しました");
+          } else [toast.error("コメントの削除に失敗しました")];
         })
         .catch(() => {
           toast.error("コメントの削除に失敗しました");

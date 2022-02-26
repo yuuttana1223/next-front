@@ -1,4 +1,4 @@
-import { VFC, useContext } from "react";
+import { VFC, useContext, useState } from "react";
 import { Button } from "src/components/shared/Button";
 import { FloatingLabelInput } from "src/components/shared/Input/FloatingLabelInput";
 import { Maybe } from "src/components/Message/Maybe";
@@ -11,6 +11,7 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { AuthContext } from "src/providers/AuthProvider";
 import toast from "react-hot-toast";
+import { ProcessingLoader } from "src/components/Loader/ProcessingLoader";
 
 export type Inputs = {
   email: string;
@@ -21,16 +22,16 @@ export const SignInForm: VFC = () => {
   const { setCurrentUser } = useContext(AuthContext);
   const router = useRouter();
   const methods = useForm<Inputs>();
+  const [processing, setProcessing] = useState(false);
   const onSubmit: SubmitHandler<Inputs> = (params) => {
+    setProcessing(true);
     signIn(params)
       .then((res) => {
         if (res.status === 200) {
           Cookies.set("access_token", res.headers["access-token"]);
           Cookies.set("client", res.headers["client"]);
           Cookies.set("uid", res.headers["uid"]);
-          toast.success("ログインに成功しました", {
-            duration: 10000,
-          });
+          toast.success("ログインに成功しました");
           setCurrentUser(res.data.data);
           router.push(PATH.ROOT);
         } else {
@@ -39,6 +40,9 @@ export const SignInForm: VFC = () => {
       })
       .catch(() => {
         toast.error("ログインに失敗しました");
+      })
+      .finally(() => {
+        setProcessing(false);
       });
   };
 
@@ -51,6 +55,7 @@ export const SignInForm: VFC = () => {
             type="email"
             name="email"
             placeholder="メールアドレス"
+            autocomplete="username"
             validation={{
               pattern: reg,
               required: true,
@@ -65,6 +70,7 @@ export const SignInForm: VFC = () => {
             type="password"
             name="password"
             placeholder="パスワード"
+            autocomplete="current-password"
             validation={{ required: true, minLength: 8, maxLength: 25 }}
           />
           <p className="my-2 text-xs text-gray-400">
@@ -75,7 +81,16 @@ export const SignInForm: VFC = () => {
           )}
         </div>
         <div className="mt-4">
-          <Button className="w-full">送信</Button>
+          {processing ? (
+            <Button type="submit" className="w-full">
+              <ProcessingLoader className="mr-3 -ml-7" />
+              送信中...
+            </Button>
+          ) : (
+            <Button type="submit" className="w-full">
+              送信
+            </Button>
+          )}
         </div>
         <Maybe
           link={{

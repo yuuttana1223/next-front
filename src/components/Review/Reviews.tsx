@@ -92,14 +92,16 @@ export const Reviews: VFC = () => {
   useEffect(() => {
     if (router.query.sort_by || router.query.search_query) {
       fetchReviews(router.asPath).then((res) => {
-        sortSelect(
-          res.data,
-          selects.find(
-            (select) =>
-              select.sortBy === Object.values(router.query)[0] &&
-              select.value === Object.values(router.query)[1]
-          ) ?? selects[0]
-        );
+        if (res.status === 200) {
+          sortSelect(
+            res.data,
+            selects.find(
+              (select) =>
+                select.sortBy === Object.values(router.query)[0] &&
+                select.value === Object.values(router.query)[1]
+            ) ?? selects[0]
+          );
+        }
       });
     } else {
       setSelectState({

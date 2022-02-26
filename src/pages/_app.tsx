@@ -20,7 +20,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       <SWRConfig value={{ fetcher }}>
         <Component {...pageProps} />
       </SWRConfig>
-      <Toaster />
+      <Toaster toastOptions={{ duration: 5000 }} />
     </AuthProvider>
   );
 };
