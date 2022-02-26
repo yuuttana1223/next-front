@@ -1,7 +1,6 @@
 import { VFC, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { ErrorMessage } from "src/components/Message/ErrorMessage";
-import { FormValues } from "src/components/Form/ReviewForm";
 
 type Props = {
   labelName: string;
@@ -21,7 +20,7 @@ export const Textarea: VFC<Props> = (props) => {
     setValue,
     formState: { errors },
     watch,
-  } = useFormContext<FormValues>();
+  } = useFormContext();
   const count = watch("content")?.length ?? props.selected?.length ?? 0;
 
   useEffect(() => {
