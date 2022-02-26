@@ -24,7 +24,9 @@ export const AuthProvider: VFC<{ children: ReactNode }> = (props) => {
   useEffect(() => {
     fetchCurrentUser()
       ?.then((res) => {
-        setCurrentUser(res.data.user);
+        if (res.status === 200) {
+          setCurrentUser(res.data.user);
+        }
       })
       .catch((e: AxiosError) => {
         console.error(e.message);

@@ -40,14 +40,18 @@ export const CommentForm: VFC<Props> = (props) => {
     if (props.comment.id) {
       patchComment(params, reviewId, props.comment.id)
         .then((res) => {
-          props.handleEdit(undefined, "");
-          mutate(
-            `${API_URL}/comments`,
-            comments.map((comment) =>
-              comment.id === props.comment.id ? res.data : comment
-            )
-          );
-          toast.success("コメントを更新しました");
+          if (res.status === 200) {
+            props.handleEdit(undefined, "");
+            mutate(
+              `${API_URL}/comments`,
+              comments.map((comment) =>
+                comment.id === props.comment.id ? res.data : comment
+              )
+            );
+            toast.success("コメントを更新しました");
+          } else {
+            toast.error("コメントの更新に失敗しました");
+          }
         })
         .catch(() => {
           toast.error("コメントの更新に失敗しました");
@@ -55,8 +59,12 @@ export const CommentForm: VFC<Props> = (props) => {
     } else {
       postComment(params, reviewId)
         .then((res) => {
-          mutate(`${API_URL}/comments`, [...comments, res.data]);
-          toast.success("コメントを投稿しました");
+          if (res.status === 201) {
+            mutate(`${API_URL}/comments`, [...comments, res.data]);
+            toast.success("コメントを投稿しました");
+          } else {
+            toast.error("コメントの投稿に失敗しました");
+          }
         })
         .catch(() => {
           toast.error("コメントの投稿に失敗しました");

@@ -20,9 +20,13 @@ export const EditUser: VFC = () => {
   const onSubmit: SubmitHandler<Inputs> = (params) => {
     patchUser(params, currentUser?.id)
       .then((res) => {
-        setCurrentUser(res.data);
-        toast.success("ユーザー情報を更新しました");
-        router.push(PATH.ROOT);
+        if (res.status === 200) {
+          setCurrentUser(res.data);
+          toast.success("ユーザー情報を更新しました");
+          router.push(PATH.ROOT);
+        } else {
+          toast.error("ユーザー情報の更新に失敗しました");
+        }
       })
       .catch(() => {
         toast.error("ユーザー情報の更新に失敗しました");
@@ -35,9 +39,10 @@ export const EditUser: VFC = () => {
         <h1 className="mb-8 text-2xl text-center">ユーザー編集</h1>
         <div className="my-2">
           <FloatingLabelInput
-            type="name"
+            type="text"
             name="name"
             value={currentUser?.name}
+            autocomplete="on"
             placeholder="名前"
             validation={{ required: true, minLength: 2, maxLength: 20 }}
           />
@@ -46,7 +51,9 @@ export const EditUser: VFC = () => {
           )}
         </div>
         <div className="mt-4">
-          <Button className="w-full">送信</Button>
+          <Button type="submit" className="w-full">
+            送信
+          </Button>
         </div>
       </form>
     </FormProvider>

@@ -16,9 +16,13 @@ export const SettingDropDown = () => {
 
   const handleClick = useCallback(() => {
     signOut()
-      .then(() => {
-        setCurrentUser(undefined);
-        toast.success("ログアウトしました");
+      .then((res) => {
+        if (res.status === 200) {
+          setCurrentUser(undefined);
+          toast.success("ログアウトしました");
+        } else {
+          toast.error("ログアウトに失敗しました");
+        }
       })
       .catch(() => {
         toast.error("ログアウトに失敗しました");

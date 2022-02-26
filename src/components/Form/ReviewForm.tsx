@@ -38,17 +38,21 @@ export const ReviewForm: VFC<Props> = (props) => {
     if (props.review) {
       patchReview(params, props.review.id)
         .then((res) => {
-          mutate(
-            `${API_URL}/reviews`,
-            reviews?.map((review) =>
-              review.id === res.data.id ? res.data : review
-            )
-          );
-          toast.success("レビューを更新しました");
-          router.push(PATH.REVIEWS.SHOW(res.data.id));
+          if (res.status === 200) {
+            mutate(
+              `${API_URL}/reviews`,
+              reviews?.map((review) =>
+                review.id === res.data.id ? res.data : review
+              )
+            );
+            toast.success("レビューを更新しました");
+            router.push(PATH.REVIEWS.SHOW(res.data.id));
+          } else {
+            toast.error("レビューの更新に失敗しました");
+          }
         })
         .catch(() => {
-          toast.error("レビュー編集に失敗しました");
+          toast.error("レビュー更新に失敗しました");
         })
         .finally(() => {
           setProcessing(false);
@@ -56,11 +60,15 @@ export const ReviewForm: VFC<Props> = (props) => {
     } else {
       postReview(params)
         .then((res) => {
-          mutate(`${API_URL}/reviews`, [{ ...reviews }, res.data]);
-          toast.success("レビューを作成しました", {
-            duration: 10000,
-          });
-          router.push(PATH.REVIEWS.SHOW(res.data.id));
+          if (res.status === 201) {
+            mutate(`${API_URL}/reviews`, [{ ...reviews }, res.data]);
+            toast.success("レビューを作成しました", {
+              duration: 10000,
+            });
+            router.push(PATH.REVIEWS.SHOW(res.data.id));
+          } else {
+            toast.error("レビューの作成に失敗しました");
+          }
         })
         .catch(() => {
           toast.error("レビュー作成に失敗しました");

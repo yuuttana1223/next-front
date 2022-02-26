@@ -1,4 +1,3 @@
-// 親コンポーネントでreviews, likes, comments, favoritesはundefinedではないことが保証されている
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { VFC, useContext, useState, useCallback } from "react";
 import { HiOutlineChat } from "react-icons/hi";
@@ -39,6 +38,7 @@ export const ReviewCard: VFC<Props> = (props) => {
   const { favorites } = useAllFavorites();
   const { favoriteReviews } = useFavoriteReviews(currentUser?.id);
   const { comments } = useAllComments();
+
   // レビューを削除後props.reviewがundefinedになるので、props.review?にした
   const [likeState, setLikeState] = useState({
     likes: likes!.filter((like) => like.review_id === props.review?.id),
@@ -102,18 +102,20 @@ export const ReviewCard: VFC<Props> = (props) => {
 
   const handleDelete = useCallback(() => {
     deleteReview(props.review?.id)
-      .then(() => {
-        mutate(
-          `${API_URL}/reviews`,
-          reviews?.filter((review) => review.id !== props.review?.id)
-        );
-        toast.success("レビューを削除しました", {
-          duration: 10000,
-        });
-        router.push(PATH.ROOT);
+      .then((res) => {
+        if (res.status === 204) {
+          mutate(
+            `${API_URL}/reviews`,
+            reviews?.filter((review) => review.id !== props.review?.id)
+          );
+          toast.success("レビューを削除しました");
+          router.push(PATH.ROOT);
+        } else {
+          toast.error("レビューの削除に失敗しました");
+        }
       })
       .catch(() => {
-        toast.error("レビュー削除に失敗しました");
+        toast.error("レビューの削除に失敗しました");
       });
   }, [props.review?.id, mutate, reviews, router]);
 
@@ -125,14 +127,19 @@ export const ReviewCard: VFC<Props> = (props) => {
     if (likeState.isLiked) {
       undoLike();
       deleteLike(reviewId)
-        .then(() => {
-          mutate(
-            `${API_URL}/likes`,
-            likes.filter(
-              (like) =>
-                like.review_id !== reviewId && like.user_id !== currentUser?.id
-            )
-          );
+        .then((res) => {
+          if (res.status === 204) {
+            mutate(
+              `${API_URL}/likes`,
+              likes.filter(
+                (like) =>
+                  like.review_id !== reviewId &&
+                  like.user_id !== currentUser?.id
+              )
+            );
+          } else {
+            likeReview(reviewId);
+          }
         })
         .catch(() => {
           likeReview(reviewId);
@@ -141,7 +148,11 @@ export const ReviewCard: VFC<Props> = (props) => {
       likeReview(reviewId);
       postLike(reviewId)
         .then((res) => {
-          mutate(`${API_URL}/likes`, [...likes, res.data]);
+          if (res.status === 201) {
+            mutate(`${API_URL}/likes`, [...likes, res.data]);
+          } else {
+            undoLike();
+          }
         })
         .catch(() => {
           undoLike();
@@ -207,7 +218,7 @@ export const ReviewCard: VFC<Props> = (props) => {
     favorites,
     isFavorite,
     mutate,
-    props.review?.id,
+    props.review,
   ]);
 
   return (
