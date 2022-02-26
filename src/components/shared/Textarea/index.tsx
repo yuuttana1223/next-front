@@ -1,12 +1,13 @@
-import { VFC, useState, useEffect } from "react";
+import { VFC, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { ErrorMessage } from "src/components/Message/ErrorMessage";
+import { FormValues } from "src/components/Form/ReviewForm";
 
 type Props = {
   labelName: string;
   rows?: number;
   placeholder?: string;
-  name: string;
+  name: "content";
   selected?: string;
   validation: {
     maxLength: number;
@@ -19,24 +20,19 @@ export const Textarea: VFC<Props> = (props) => {
     register,
     setValue,
     formState: { errors },
-  } = useFormContext();
-  const [count, setCount] = useState<number>(0);
+    watch,
+  } = useFormContext<FormValues>();
+  const count = watch("content")?.length ?? props.selected?.length ?? 0;
 
   useEffect(() => {
-    setCount(props.selected?.length ?? 0);
-    setValue(props.name, props.selected);
+    setValue(props.name, props.selected ?? "");
   }, [setValue, props.name, props.selected]);
 
   return (
     <label className="block">
       <span className="font-semibold text-gray-700">{props.labelName}</span>(
       {count}/{props.validation?.maxLength})
-      {count > props.validation.maxLength && (
-        <ErrorMessage
-          message={`1文字以上${props.validation.maxLength}字以内で入力してください`}
-        />
-      )}
-      {errors[props.name] && (
+      {(count > props.validation.maxLength || errors[props.name]) && (
         <ErrorMessage
           message={`1文字以上${props.validation.maxLength}字以内で入力してください`}
         />
@@ -48,7 +44,6 @@ export const Textarea: VFC<Props> = (props) => {
         rows={props.rows}
         placeholder={props.placeholder}
         {...register(props.name, props.validation)}
-        onChange={(e) => setCount(e.target.value.length)}
       ></textarea>
     </label>
   );
