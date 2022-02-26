@@ -12,7 +12,7 @@ export const Button: VFC<Props> = (props) => {
     <button
       type={props.type}
       disabled={props.disabled}
-      className={`py-2 text-center text-white rounded md:py-3 bg-emerald-400 hover:bg-emerald-500 focus:outline-none ${props.className}`}
+      className={`py-3 text-center text-white rounded bg-emerald-400 hover:bg-emerald-500 focus:outline-none ${props.className}`}
     >
       {props.children}
     </button>
