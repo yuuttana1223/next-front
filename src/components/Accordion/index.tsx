@@ -9,6 +9,10 @@ type Props = {
 };
 
 export const Accordion: VFC<Props> = (props) => {
+  if (props.reviews?.length === 0) {
+    return <></>;
+  }
+
   return (
     <Disclosure>
       {({ open }) => (
