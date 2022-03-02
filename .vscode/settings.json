@@ -4,5 +4,8 @@
     "strings": true
   },
   "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": { "source.fixAll": true }
+  "editor.codeActionsOnSave": { "source.fixAll": true },
+  "tailwindCSS.experimental.classRegex": [
+    ["classnames\\(([^)]*)\\)", "'([^']*)'"]
+  ]
 }
