@@ -1,0 +1,11 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": { "source.fixAll": true },
+  "tailwindCSS.experimental.classRegex": [
+    ["classnames\\(([^)]*)\\)", "'([^']*)'"]
+  ]
+}

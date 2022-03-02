@@ -1,16 +1,18 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import { Reviews } from "src/components/Review/Reviews";
+import { AppLayout } from "src/layouts/AppLayout";
 
 const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>KCG Review</title>
-        <meta
-          name="description"
-          content="京都コンピュータ学院(KCG)の授業評価サイトです"
-        />
+        <title>KCG Reviews</title>
+        <meta name="description" content="授業評価一覧" />
       </Head>
+      <AppLayout isSearchInput>
+        <Reviews />
+      </AppLayout>
     </>
   );
 };
