@@ -10,7 +10,7 @@ export const ExternalLink: VFC<Props> = (props) => {
     <a
       href={props.href}
       target="_blank"
-      className="block py-2 hover:text-gray-800 hover:bg-gray-100"
+      className="block py-2 pl-5 hover:text-gray-800 hover:bg-gray-100"
       rel="noreferrer"
     >
       {props.children}

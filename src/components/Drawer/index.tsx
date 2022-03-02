@@ -70,8 +70,8 @@ export const Drawer: VFC<Props> = (props) => {
             </li>
             {currentUser && (
               <li className=" text-gray-600 border-b-2">
-                <div className="py-2 ml-5">
-                  <p className="py-2 text-lg text-gray-800">お気に入り</p>
+                <div className="py-2">
+                  <p className="py-2 pl-5 text-lg text-gray-800">お気に入り</p>
                   <ul>
                     {favoriteReviews?.slice(0, displayLimit).map((review) => (
                       <LectureLink key={review.id} review={review} />
@@ -86,9 +86,9 @@ export const Drawer: VFC<Props> = (props) => {
                 </div>
               </li>
             )}
-            <li className="py-2 ml-5 text-gray-600">
+            <li className="py-2 text-gray-600">
               <p className="py-2 text-lg text-gray-800">
-                KCG関連の他のサービス
+                <span className="pl-5">KCG関連の他のサービス</span>
               </p>
               <ul className="mb-2">
                 <li>

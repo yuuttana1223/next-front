@@ -14,7 +14,7 @@ export const LectureLink: VFC<Props> = (props) => {
     <li>
       <Link href={`${PATH.REVIEWS.SHOW(props.review.id)}`}>
         <a
-          className={`block py-2 hover:bg-gray-100 break-all ${
+          className={`block py-2 pl-5 hover:bg-gray-100 break-all ${
             router.asPath.split("?")[0] ===
               PATH.REVIEWS.SHOW(props.review.id) && "bg-gray-100"
           }`}
