@@ -27,10 +27,8 @@ export const SignUpForm: VFC = () => {
   const methods = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = (params) => {
-    setProcessing(true);
     signUp(params)
       .then((res) => {
-        setProcessing(false);
         if (res.status === 200) {
           Cookies.set("access_token", res.headers["access-token"]);
           Cookies.set("client", res.headers["client"]);
@@ -46,6 +44,9 @@ export const SignUpForm: VFC = () => {
       })
       .catch(() => {
         toast.error("ユーザー登録に失敗しました");
+      })
+      .finally(() => {
+        setProcessing(false);
       });
   };
 
