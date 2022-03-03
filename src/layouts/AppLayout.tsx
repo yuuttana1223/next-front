@@ -1,9 +1,9 @@
 import { ReactNode, VFC, useState, useCallback, useContext } from "react";
 import { Header } from "src/layouts/Header";
-import { HiMenu } from "react-icons/hi";
+import { HiMenu, HiSearch } from "react-icons/hi";
 import { Drawer } from "src/components/Drawer";
 import { KcgLogoLink } from "src/components/shared/Link/KcgLogoLink";
-import { SearchInput } from "src/components/shared/Input/SearchInput";
+import { SearchForm } from "src/components/Form/SearchForm";
 import { useRouter } from "next/router";
 import { PATH } from "src/urls/path";
 import { SettingDropDown } from "src/components/Dropdown/SettingDropDown";
@@ -55,10 +55,20 @@ export const AppLayout: VFC<Props> = (props) => {
         </h1>
         {props.isSearchInput && (
           <div className="ml-auto md:mx-auto">
-            <SearchInput
-              setIsOpen={setIsSearchModal}
-              handleClick={handleClick}
-            />
+            <div className="hidden md:block">
+              <SearchForm
+                setIsOpen={setIsSearchModal}
+                handleClick={handleClick}
+              />
+            </div>
+            <div className="flex md:hidden">
+              <button
+                onClick={() => setIsSearchModal(true)}
+                className="outline-none"
+              >
+                <HiSearch className="w-8 h-8 text-gray-600 md:w-6 md:h-6" />
+              </button>
+            </div>
             <SearchModal
               isOpen={isSearchModal}
               setIsOpen={setIsSearchModal}

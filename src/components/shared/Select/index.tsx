@@ -2,6 +2,7 @@ import { VFC, useState, useEffect } from "react";
 import { OtherInput } from "src/components/shared/Input/OtherInput";
 import { useFormContext } from "react-hook-form";
 import { ErrorMessage } from "src/components/Message/ErrorMessage";
+import { HiCheck } from "react-icons/hi";
 
 type Props = {
   name: string;
@@ -40,25 +41,30 @@ export const Select: VFC<Props> = (props) => {
             </div>
           )}
         </label>
-        <select
-          {...register(props.name, props.validation)}
-          className="relative py-3 px-2 w-full text-left bg-white rounded-lg focus-visible:border-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-blue-300 shadow-md sm:text-sm"
-          onChange={(e) => setSelected(e.target.value)}
-        >
-          {!props.selected && (
-            <option hidden value="">
-              選択してください
-            </option>
-          )}
+        <div className="relative">
+          <select
+            {...register(props.name, props.validation)}
+            className="py-3 px-2 w-full text-left bg-white rounded-lg focus-visible:border-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-blue-300 shadow-md appearance-none sm:text-sm"
+            onChange={(e) => setSelected(e.target.value)}
+          >
+            {!props.selected && (
+              <option hidden value="">
+                選択してください
+              </option>
+            )}
 
-          {props.texts?.map((text) => (
-            // ??はkeyが新規投稿時[undefined, 'プロ演23']でkeyエラーなるのを回避するため
-            <option key={text ?? ""} value={text} className="block truncate">
-              {text}
-            </option>
-          ))}
-          {props.isOther && <option value="その他">その他</option>}
-        </select>
+            {props.texts?.map((text) => (
+              // ??はkeyが新規投稿時[undefined, 'プロ演23']でkeyエラーなるのを回避するため
+              <option key={text ?? ""} value={text} className="block truncate">
+                {text}
+              </option>
+            ))}
+            {props.isOther && <option value="その他">その他</option>}
+          </select>
+          <div className="flex absolute inset-y-0 right-0 items-center px-2 pointer-events-none">
+            <HiCheck />
+          </div>
+        </div>
       </div>
       {props.isOther && selected === "その他" && (
         <div className="my-2">

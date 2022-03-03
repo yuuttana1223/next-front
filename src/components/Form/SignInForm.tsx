@@ -82,7 +82,7 @@ export const SignInForm: VFC = () => {
         </div>
         <div className="mt-4">
           {processing ? (
-            <Button type="submit" className="w-full">
+            <Button type="button" className="w-full">
               <ProcessingLoader className="mr-3 -ml-7" />
               送信中...
             </Button>

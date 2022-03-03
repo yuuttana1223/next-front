@@ -29,7 +29,7 @@ export const SettingDropDown = () => {
       });
   }, [setCurrentUser]);
   return (
-    <Menu as="div">
+    <Menu as={Fragment}>
       <Menu.Button className="block p-1 active:bg-gray-200 rounded-full outline-none">
         <HiOutlineUserCircle
           title="ユーザー"
