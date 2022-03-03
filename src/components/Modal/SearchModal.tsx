@@ -48,7 +48,6 @@ export const SearchModal: VFC<Props> = (props) => {
           type="text"
           autoFocus
           placeholder="授業名/教員名"
-          required
           className="peer block px-0 pt-3 mx-3 w-full text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 focus:border-blue-600 focus:outline-none focus:ring-0 appearance-none"
         />
         <button type="submit" className="outline-none">
