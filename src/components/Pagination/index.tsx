@@ -1,7 +1,8 @@
-import { VFC, useCallback } from "react";
+import { VFC, useCallback, useMemo } from "react";
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from "react-icons/hi";
 import { useRouter } from "next/router";
 import ReactPaginate from "react-paginate";
+import { useWindowDimensions } from "src/hooks/useWindowDimensions";
 
 type Props = {
   pageCount: number;
@@ -13,6 +14,8 @@ type Props = {
 
 export const Pagination: VFC<Props> = (props) => {
   const router = useRouter();
+  const { width } = useWindowDimensions();
+  const isSmWidth = useMemo(() => width < 768, [width]);
 
   const handleClickPageNumber = useCallback(
     (num: number) => {
@@ -30,13 +33,15 @@ export const Pagination: VFC<Props> = (props) => {
       onPageChange={(e) => handleClickPageNumber(e.selected + 1)}
       forcePage={props.currentPage - 1}
       pageCount={props.pageCount}
-      breakLabel="..."
-      breakLinkClassName="block py-2 px-4 hover:bg-gray-100 rounded"
+      marginPagesDisplayed={isSmWidth ? 2 : 3}
+      pageRangeDisplayed={isSmWidth ? 2 : 3}
+      breakLabel={"..."}
+      breakLinkClassName="block py-2 hover:bg-gray-100 rounded md:px-4"
       previousLabel={<HiOutlineChevronLeft size="24px" />}
-      previousLinkClassName="block  hover:bg-gray-100 p-2 mr-4"
+      previousLinkClassName="block mr-1 hover:bg-gray-100 md:p-2 md:mr-4"
       nextLabel={<HiOutlineChevronRight size="24px" />}
-      nextLinkClassName="block p-2 ml-4 rounded hover:bg-gray-100"
-      pageLinkClassName={`block py-2 px-4 hover:bg-gray-100 rounded`}
+      nextLinkClassName="block ml-1 hover:bg-gray-100 rounded md:p-2 md:ml-4"
+      pageLinkClassName={`block py-1 px-2 hover:bg-gray-100 rounded md:px-4`}
       activeClassName="bg-gray-100"
       className="flex items-center text-gray-600"
     />

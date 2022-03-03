@@ -43,13 +43,13 @@ export const FloatingLabelInput: VFC<Props> = (props) => {
       <div className="relative self-center border">
         <input
           {...register(props.name, props.validation)}
-          className="p-2 w-full rounded outline-none"
+          className="relative z-10 p-2 w-full rounded outline-none"
           id={props.name}
           type={inputState.type}
           autoComplete={props.autocomplete}
         />
         <label
-          className={`absolute flex items-center text-opacity-50 text-gray-600 px-2 py-1 transition-all duration-200 ease-in-out ${
+          className={`absolute z-20 flex items-center text-opacity-50 text-gray-600 px-2 py-1 transition-all duration-200 ease-in-out ${
             watch(props.name, props.value)
               ? "-top-3 text-xs bg-white text-blue-700"
               : "top-2 text-sm"

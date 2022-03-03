@@ -1,4 +1,4 @@
-import { VFC, useContext } from "react";
+import { VFC, useContext, useState } from "react";
 import { Button } from "src/components/shared/Button";
 import { FloatingLabelInput } from "src/components/shared/Input/FloatingLabelInput";
 import { PATH } from "src/urls/path";
@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { AuthContext } from "src/providers/AuthProvider";
 import { patchUser } from "src/apis/auth";
 import toast from "react-hot-toast";
+import { ProcessingLoader } from "src/components/Loader/ProcessingLoader";
 
 export type Inputs = {
   name: string;
@@ -17,7 +18,10 @@ export const EditUser: VFC = () => {
   const { setCurrentUser, currentUser } = useContext(AuthContext);
   const router = useRouter();
   const methods = useForm<Inputs>();
+  const [processing, setProcessing] = useState(false);
+
   const onSubmit: SubmitHandler<Inputs> = (params) => {
+    setProcessing(true);
     patchUser(params, currentUser?.id)
       .then((res) => {
         if (res.status === 200) {
@@ -30,6 +34,9 @@ export const EditUser: VFC = () => {
       })
       .catch(() => {
         toast.error("ユーザー情報の更新に失敗しました");
+      })
+      .finally(() => {
+        setProcessing(false);
       });
   };
 
@@ -51,9 +58,16 @@ export const EditUser: VFC = () => {
           )}
         </div>
         <div className="mt-4">
-          <Button type="submit" className="w-full">
-            送信
-          </Button>
+          {processing ? (
+            <Button type="button" className="w-full">
+              <ProcessingLoader className="mr-2" />
+              送信中...
+            </Button>
+          ) : (
+            <Button type="submit" className="w-full">
+              送信
+            </Button>
+          )}
         </div>
       </form>
     </FormProvider>

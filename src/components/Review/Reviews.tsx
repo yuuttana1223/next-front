@@ -148,8 +148,13 @@ export const Reviews: VFC = () => {
           state={selectState}
           sortSelect={sortSelect}
         />
+        {router.query.search_query && (
+          <p className="mt-6 -mb-8 text-2xl text-gray-900 break-words">
+            {router.query.search_query}の検索結果
+          </p>
+        )}
         {!selectState.reviews?.length && (
-          <p className="mt-10 text-gray-900">
+          <p className="mt-16 text-gray-900">
             該当するレビューが見つかりません
           </p>
         )}
