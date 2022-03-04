@@ -1,5 +1,4 @@
-import { useState, useCallback, VFC, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useState, useCallback, VFC, useEffect, ChangeEvent } from "react";
 import { postComment } from "src/apis/reviewComment";
 import { ErrorMessage } from "src/components/Message/ErrorMessage";
 import toast from "react-hot-toast";
@@ -19,26 +18,36 @@ export type CommentValue = {
   body: string;
 };
 
-export const CommentForm: VFC<Props> = (props) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    watch,
-    setValue,
-  } = useForm<CommentValue>();
+export const NewComment: VFC<Props> = (props) => {
   const { mutate } = useSWRConfig();
   const { comments } = useAllComments();
+  const [inputState, setInputState] = useState({
+    body: props.comment.body ?? "",
+    isFocus: false,
+  });
   const router = useRouter();
 
-  const onSubmit = (params: CommentValue) => {
-    if (!comments) {
+  const handleChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setInputState({
+        ...inputState,
+        body: e.target.value,
+      });
+    },
+    [inputState]
+  );
+
+  const handleClick = () => {
+    if (!comments || !inputState.body) {
       return;
     }
     const reviewId = Number(router.query.id);
-    setValue("body", "");
+    setInputState({
+      body: "",
+      isFocus: false,
+    });
     if (props.comment.id) {
-      patchComment(params, reviewId, props.comment.id)
+      patchComment(inputState.body, reviewId, props.comment.id)
         .then((res) => {
           if (res.status === 200) {
             props.handleEdit(undefined, "");
@@ -57,7 +66,7 @@ export const CommentForm: VFC<Props> = (props) => {
           toast.error("コメントの更新に失敗しました");
         });
     } else {
-      postComment(params, reviewId)
+      postComment(inputState.body, reviewId)
         .then((res) => {
           if (res.status === 201) {
             mutate(`${API_URL}/comments`, [...comments, res.data]);
@@ -72,45 +81,59 @@ export const CommentForm: VFC<Props> = (props) => {
     }
   };
 
-  const [isFocus, setIsFocus] = useState(false);
   const handleCancel = useCallback(() => {
-    setIsFocus(false);
+    setInputState({
+      body: "",
+      isFocus: false,
+    });
     props.handleEdit(undefined, "");
-    setValue("body", "");
-  }, [props, setValue]);
+  }, [props]);
 
   useEffect(() => {
-    setValue("body", props.comment.body ?? "");
-  }, [props.comment.body, setValue]);
+    setInputState((prevInputState) => ({
+      ...prevInputState,
+      body: props.comment.body ?? "",
+    }));
+  }, [props.comment.body]);
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="group relative z-0 mb-6 w-full"
-    >
+    <div className="group relative z-0 mb-6 w-full">
+      {inputState.body.length > 500 && (
+        <ErrorMessage
+          message="500文字以内で入力してください"
+          className="inline -mb-10 font-normal"
+        />
+      )}
       <input
-        autoComplete="off"
         type="text"
-        {...register("body", { required: true, maxLength: 500 })}
-        className="peer block py-2 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 focus:border-blue-600 focus:outline-none focus:ring-0 appearance-none"
+        autoComplete="off"
+        name="body"
+        value={inputState.body}
+        onChange={handleChange}
+        className="peer block p-2 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 focus:border-blue-600 focus:outline-none focus:ring-0"
         placeholder=" "
-        required
-        onFocus={() => setIsFocus(true)}
-        onBlur={() => setIsFocus(false)}
+        onFocus={() =>
+          setInputState((prevInputState) => ({
+            ...prevInputState,
+            isFocus: true,
+          }))
+        }
+        onBlur={() =>
+          setInputState((prevInputState) => ({
+            ...prevInputState,
+            isFocus: false,
+          }))
+        }
       />
       <label
         htmlFor="body"
-        className=" absolute top-3 peer-focus:left-0 -z-10 text-sm text-gray-500 peer-focus:text-blue-600 duration-300 scale-75 peer-placeholder-shown:scale-100 peer-focus:scale-75 -translate-y-6 peer-placeholder-shown:translate-y-0 peer-focus:-translate-y-6 origin-[0]"
+        className="flex absolute top-3 peer-focus:left-0 -z-10 text-sm text-gray-500 peer-focus:text-blue-600 duration-300 scale-75 peer-placeholder-shown:scale-100 peer-focus:scale-75 -translate-y-6 peer-placeholder-shown:translate-y-0 peer-focus:-translate-y-6 origin-[0]"
       >
-        授業の評価に対するコメント{" "}
-        {errors.body && (
-          <ErrorMessage
-            message="500文字以内で入力してください"
-            className="inline"
-          />
-        )}
+        <div>
+          <p className="w-full">授業の評価に対するコメント</p>
+        </div>
       </label>
-      {(isFocus || watch("body") || props.comment.id) && (
+      {(inputState.isFocus || inputState.body || props.comment.id) && (
         <div className="mt-1 text-right">
           <button
             type="button"
@@ -120,11 +143,11 @@ export const CommentForm: VFC<Props> = (props) => {
             キャンセル
           </button>
           <button
-            type="submit"
-            disabled={!watch("body")}
-            onClick={handleSubmit(onSubmit)}
-            className={`py-2 px-4 mr-2 mb-2 text-sm font-medium text-center   ${
-              watch("body")
+            type="button"
+            onClick={handleClick}
+            disabled={!inputState.body}
+            className={`py-2 px-4 mb-2 text-sm font-medium text-center   ${
+              inputState.body
                 ? "hover:bg-blue-700 bg-blue-600 text-white"
                 : "bg-gray-200 text-gray-400"
             } rounded-sm border border-gray-300 focus:ring-4 focus:ring-blue-300 md:px-5`}
@@ -133,6 +156,6 @@ export const CommentForm: VFC<Props> = (props) => {
           </button>
         </div>
       )}
-    </form>
+    </div>
   );
 };

@@ -1,6 +1,5 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import { CommentValue } from "src/components/Form/CommentForm";
 import { API_URL } from "src/urls/api";
 export type Comment = {
   id: number;
@@ -12,19 +11,19 @@ export type Comment = {
   updated_at: string;
 };
 
-export const postComment = (params: CommentValue, reviewId?: number) => {
+export const postComment = (body: string, reviewId?: number) => {
   return axios.post<Comment>(`${API_URL}/reviews/${reviewId}/comments`, {
     "access-token": Cookies.get("access_token"),
     client: Cookies.get("client"),
     uid: Cookies.get("uid"),
     comment: {
-      body: params.body,
+      body: body,
     },
   });
 };
 
 export const patchComment = (
-  params: CommentValue,
+  body: string,
   reviewId?: number,
   commentId?: number
 ) => {
@@ -35,7 +34,7 @@ export const patchComment = (
       client: Cookies.get("client"),
       uid: Cookies.get("uid"),
       comment: {
-        body: params.body,
+        body: body,
       },
     }
   );
