@@ -37,6 +37,7 @@ export const CommentForm: VFC<Props> = (props) => {
     }
     const reviewId = Number(router.query.id);
     setValue("body", "");
+    setIsFocus(false);
     if (props.comment.id) {
       patchComment(params, reviewId, props.comment.id)
         .then((res) => {
@@ -89,9 +90,9 @@ export const CommentForm: VFC<Props> = (props) => {
       className="group relative z-0 mb-6 w-full"
     >
       <input
-        autoComplete="off"
         type="text"
-        {...register("body", { required: true, maxLength: 500 })}
+        autoComplete="off"
+        {...register("body", { maxLength: 500 })}
         className="peer block py-2 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 focus:border-blue-600 focus:outline-none focus:ring-0 appearance-none"
         placeholder=" "
         required
@@ -122,7 +123,6 @@ export const CommentForm: VFC<Props> = (props) => {
           <button
             type="submit"
             disabled={!watch("body")}
-            onClick={handleSubmit(onSubmit)}
             className={`py-2 px-4 mr-2 mb-2 text-sm font-medium text-center   ${
               watch("body")
                 ? "hover:bg-blue-700 bg-blue-600 text-white"
