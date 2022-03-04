@@ -275,17 +275,17 @@ export const ReviewCard: VFC<Props> = (props) => {
               props.isEditable ? "break-all" : "truncate"
             }`}
           >
-            <p className="font-semibold ">内容:</p>
+            <p className="font-semibold">内容:</p>
             {currentUser ? (
               <span className="break-all">{props.review?.content}</span>
             ) : (
               <div>
-                <span>
+                <div className="truncate">
                   {props.review?.content.substring(0, 20)}
                   {props.review?.content.length &&
                     props.review?.content.length > 20 &&
                     "..."}
-                </span>
+                </div>
                 <div className="text-center">
                   <Link href={PATH.USERS.SIGN_IN}>
                     <a className="hover:text-gray-700 cursor-pointer">
