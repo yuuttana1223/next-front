@@ -5,7 +5,7 @@ import { Loader } from "src/components/Loader";
 import { ErrorMessage } from "src/components/Message/ErrorMessage";
 import { useRouter } from "next/router";
 import { CommentList } from "src/components/Comment/CommentList";
-import { CommentForm } from "src/components/Form/CommentForm";
+import { NewComment } from "src/components/Comment/NewComment";
 import { useAllFavorites } from "src/hooks/useAllFavorites";
 import { useAllReviews } from "src/hooks/useAllReviews";
 import { useAllLikes } from "src/hooks/useAllLikes";
@@ -64,7 +64,7 @@ export const Review: VFC = () => {
         isEditable
       />
       <div className="mt-10">
-        <CommentForm comment={reviewComment} handleEdit={handleEdit} />
+        <NewComment comment={reviewComment} handleEdit={handleEdit} />
       </div>
       <div className="mt-10">
         <CommentList handleEdit={handleEdit} />

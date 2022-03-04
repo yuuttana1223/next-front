@@ -10,7 +10,7 @@ export const EyeButton: VFC<Props> = (props) => {
     <button
       type="button"
       onClick={props.onClick}
-      className="absolute top-2 right-2 bg-white cursor-pointer"
+      className="absolute top-2 right-2 z-10 bg-white cursor-pointer"
     >
       {props.children}
     </button>

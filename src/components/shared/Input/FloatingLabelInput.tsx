@@ -25,13 +25,11 @@ export const FloatingLabelInput: VFC<Props> = (props) => {
   });
 
   const handleClick = useCallback(() => {
-    setInputState((prevInputState) => {
-      return {
-        ...prevInputState,
-        isVisible: !prevInputState.isVisible,
-        type: prevInputState.isVisible ? "password" : "text",
-      };
-    });
+    setInputState((prevInputState) => ({
+      ...prevInputState,
+      isVisible: !prevInputState.isVisible,
+      type: prevInputState.isVisible ? "password" : "text",
+    }));
   }, []);
 
   useEffect(() => {

@@ -34,6 +34,7 @@ export const Reviews: VFC = () => {
   const { commentsError, commentsLoading } = useAllComments();
   const { favoritesError, favoritesLoading } = useAllFavorites();
   const { currentUser } = useContext(AuthContext);
+  const [sortLoading, setLoading] = useState(false);
   const [selectState, setSelectState] = useState<SelectStateType>({
     reviews,
     select: selects[0],
@@ -91,18 +92,23 @@ export const Reviews: VFC = () => {
 
   useEffect(() => {
     if (router.query.sort_by || router.query.search_query) {
-      fetchReviews(router.asPath).then((res) => {
-        if (res.status === 200) {
-          sortSelect(
-            res.data,
-            selects.find(
-              (select) =>
-                select.sortBy === Object.values(router.query)[0] &&
-                select.value === Object.values(router.query)[1]
-            ) ?? selects[0]
-          );
-        }
-      });
+      setLoading(true);
+      fetchReviews(router.asPath)
+        .then((res) => {
+          if (res.status === 200) {
+            sortSelect(
+              res.data,
+              selects.find(
+                (select) =>
+                  select.sortBy === Object.values(router.query)[0] &&
+                  select.value === Object.values(router.query)[1]
+              ) ?? selects[0]
+            );
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     } else {
       setSelectState({
         reviews,
@@ -118,7 +124,13 @@ export const Reviews: VFC = () => {
     sortSelect,
   ]);
 
-  if (reviewsLoading || likesLoading || commentsLoading || favoritesLoading) {
+  if (
+    reviewsLoading ||
+    likesLoading ||
+    commentsLoading ||
+    favoritesLoading ||
+    sortLoading
+  ) {
     return <Loader />;
   }
 

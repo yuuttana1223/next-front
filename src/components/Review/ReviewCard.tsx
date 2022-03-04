@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { VFC, useContext, useState, useCallback } from "react";
 import { HiOutlineChat } from "react-icons/hi";
 import { AuthContext } from "src/providers/AuthProvider";
@@ -40,15 +39,15 @@ export const ReviewCard: VFC<Props> = (props) => {
   const { comments } = useAllComments();
 
   // レビューを削除後props.reviewがundefinedになるので、props.review?にした
-  const [likeState, setLikeState] = useState({
-    likes: likes!.filter((like) => like.review_id === props.review?.id),
-    isLiked: likes!.some(
+  const [likesState, setLikesState] = useState({
+    likes: likes?.filter((like) => like.review_id === props.review?.id),
+    isLiked: likes?.some(
       (like) =>
         like.review_id === props.review?.id && like.user_id === currentUser?.id
     ),
   });
   const [isFavorite, setIsFavorite] = useState(
-    favorites!.some(
+    favorites?.some(
       (favorite) =>
         favorite.review_id === props.review?.id &&
         favorite.user_id === currentUser?.id
@@ -61,31 +60,26 @@ export const ReviewCard: VFC<Props> = (props) => {
       if (!currentUser) {
         return;
       }
-      setLikeState((prevLikeState) => {
-        return {
-          likes: [
-            ...prevLikeState.likes,
-            {
-              user_id: currentUser.id,
-              review_id: reviewId,
-            },
-          ],
-          isLiked: true,
-        };
+      setLikesState({
+        likes: [
+          {
+            user_id: currentUser.id,
+            review_id: reviewId,
+          },
+        ],
+        isLiked: true,
       });
     },
     [currentUser]
   );
 
   const undoLike = useCallback(() => {
-    setLikeState((prevLikeState) => {
-      return {
-        likes: prevLikeState.likes.filter(
-          (like) => like.user_id !== currentUser?.id
-        ),
-        isLiked: false,
-      };
-    });
+    setLikesState((prevLikeState) => ({
+      likes: prevLikeState.likes?.filter(
+        (like) => like.user_id !== currentUser?.id
+      ),
+      isLiked: false,
+    }));
   }, [currentUser?.id]);
 
   const pushLogin = useCallback(() => {
@@ -124,7 +118,7 @@ export const ReviewCard: VFC<Props> = (props) => {
       return;
     }
     const reviewId = props.review?.id;
-    if (likeState.isLiked) {
+    if (likesState.isLiked) {
       undoLike();
       deleteLike(reviewId)
         .then((res) => {
@@ -160,7 +154,7 @@ export const ReviewCard: VFC<Props> = (props) => {
     }
   }, [
     props.review,
-    likeState.isLiked,
+    likesState.isLiked,
     undoLike,
     mutate,
     likes,
@@ -275,17 +269,17 @@ export const ReviewCard: VFC<Props> = (props) => {
               props.isEditable ? "break-all" : "truncate"
             }`}
           >
-            <p className="font-semibold ">内容:</p>
+            <p className="font-semibold">内容:</p>
             {currentUser ? (
               <span className="break-all">{props.review?.content}</span>
             ) : (
               <div>
-                <span>
+                <div className="truncate">
                   {props.review?.content.substring(0, 20)}
                   {props.review?.content.length &&
                     props.review?.content.length > 20 &&
                     "..."}
-                </span>
+                </div>
                 <div className="text-center">
                   <Link href={PATH.USERS.SIGN_IN}>
                     <a className="hover:text-gray-700 cursor-pointer">
@@ -319,8 +313,8 @@ export const ReviewCard: VFC<Props> = (props) => {
           <div className="flex justify-between my-2">
             <GoodButton
               onClick={currentUser ? handleLike : pushLogin}
-              count={likeState.likes?.length}
-              isLiked={currentUser && likeState.isLiked}
+              count={likesState.likes?.length}
+              isLiked={currentUser && likesState.isLiked}
             />
             <FavoriteButton
               onClick={currentUser ? handleFavorite : pushLogin}
