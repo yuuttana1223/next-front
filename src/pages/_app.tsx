@@ -23,7 +23,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         canonical="https://kcg-review.vercel.app"
         description="京都コンピュータ学院の授業評価サイトです。気に入った授業を見つけて有意義な時間を手に入れましょう"
         og={{
-          image: "school_building_ekimae.png",
+          image: "/images/school_building_ekimae.png",
           type: "website",
           siteName: "kcg-review",
         }}
