@@ -21,10 +21,11 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       <NextHeadSeo
         title="kcg-review"
         canonical="https://kcg-review.vercel.app"
-        description="京都コンピュータ学院の授業評価サイトです。気に入った授業を見つけて有意義な時間を手に入れましょう"
+        description="京都コンピュータ学院の授業評価サイトです。気に入った授業を見つけて有意義な時間を手に入れましょう!"
         og={{
-          image: "/images/school_building_ekimae.png",
-          type: "website",
+          image:
+            "https://kcg-review.vercel.app/images/school_building_ekimae.png",
+          type: "article",
           siteName: "kcg-review",
         }}
         twitter={{
