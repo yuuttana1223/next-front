@@ -280,15 +280,19 @@ export const ReviewCard: VFC<Props> = (props) => {
                     props.review?.content.length > 20 &&
                     "..."}
                 </div>
-                <div className="text-center">
-                  <Link href={PATH.USERS.SIGN_IN}>
-                    <a className="hover:text-gray-700 cursor-pointer">
-                      続きを見る
-                    </a>
-                  </Link>
-                </div>
               </div>
             )}
+            <div className="text-center">
+              <Link
+                href={
+                  currentUser
+                    ? PATH.REVIEWS.SHOW(props.review?.id)
+                    : PATH.USERS.SIGN_IN
+                }
+              >
+                <a className="hover:text-gray-700 cursor-pointer">続きを見る</a>
+              </Link>
+            </div>
           </div>
 
           <div className="space-y-1 text-sm text-gray-700">
