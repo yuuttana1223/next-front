@@ -1,6 +1,7 @@
 import { HiSearch } from "react-icons/hi";
 import { useState, useEffect, VFC, useCallback, FormEvent } from "react";
 import { useRouter } from "next/router";
+import { convertToHalfWidth } from "src/utils/char";
 
 type Props = {
   setIsOpen: (isOpen: boolean) => void;
@@ -13,7 +14,8 @@ export const SearchForm: VFC<Props> = (props) => {
   const handleSubmit = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      props.handleClick(text);
+      setText((prevText) => convertToHalfWidth(prevText));
+      props.handleClick(convertToHalfWidth(text));
     },
     [props, text]
   );

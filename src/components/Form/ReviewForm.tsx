@@ -165,7 +165,7 @@ export const ReviewForm: VFC<Props> = (props) => {
             {processing ? (
               <Button type="button" disabled className="ml-auto w-24">
                 <ProcessingLoader />
-                <span>送信中...</span>
+                <span className="ml-1">送信中...</span>
               </Button>
             ) : (
               <Button type="submit" className="ml-auto w-24">
