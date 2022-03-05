@@ -37,7 +37,6 @@ export const ReviewCard: VFC<Props> = (props) => {
   const { favorites } = useAllFavorites();
   const { favoriteReviews } = useFavoriteReviews(currentUser?.id);
   const { comments } = useAllComments();
-
   // レビューを削除後props.reviewがundefinedになるので、props.review?にした
   const [likesState, setLikesState] = useState({
     likes: likes?.filter((like) => like.review_id === props.review?.id),
@@ -53,7 +52,6 @@ export const ReviewCard: VFC<Props> = (props) => {
         favorite.user_id === currentUser?.id
     )
   );
-
   const router = useRouter();
   const likeReview = useCallback(
     (reviewId: number) => {
@@ -282,17 +280,21 @@ export const ReviewCard: VFC<Props> = (props) => {
                 </div>
               </div>
             )}
-            <div className="text-center">
-              <Link
-                href={
-                  currentUser
-                    ? PATH.REVIEWS.SHOW(props.review?.id)
-                    : PATH.USERS.SIGN_IN
-                }
-              >
-                <a className="hover:text-gray-700 cursor-pointer">続きを見る</a>
-              </Link>
-            </div>
+            {!props.isEditable && (
+              <div className="text-center">
+                <Link
+                  href={
+                    currentUser
+                      ? PATH.REVIEWS.SHOW(props.review?.id)
+                      : PATH.USERS.SIGN_IN
+                  }
+                >
+                  <a className="hover:text-gray-700 cursor-pointer">
+                    続きを見る
+                  </a>
+                </Link>
+              </div>
+            )}
           </div>
 
           <div className="space-y-1 text-sm text-gray-700">
