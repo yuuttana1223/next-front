@@ -6,6 +6,7 @@ import { SWRConfig } from "swr";
 import axios from "axios";
 import NextHeadSeo from "next-head-seo";
 import Cookies from "js-cookie";
+import Head from "next/head";
 
 const fetcher = (url: string) => {
   return axios
@@ -39,6 +40,12 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
           card: "summary",
         }}
       />
+      <Head>
+        <meta
+          name="google-site-verification"
+          content="JuEskajKJ3FMvHlts2yt0w2sIv9_ybpScaQ5gFuatXo"
+        />
+      </Head>
       <AuthProvider>
         <SWRConfig value={{ fetcher }}>
           <Component {...pageProps} />
