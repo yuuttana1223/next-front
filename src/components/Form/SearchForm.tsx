@@ -33,7 +33,7 @@ export const SearchForm: VFC<Props> = (props) => {
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="授業名/教員名"
-        className="py-2 px-4 w-full rounded-none outline-blue-400 appearance-none md:w-96"
+        className="py-2 px-4 w-full outline-blue-400 md:w-96"
       />
       <button
         type="submit"

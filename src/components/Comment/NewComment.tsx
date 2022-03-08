@@ -110,7 +110,7 @@ export const NewComment: VFC<Props> = (props) => {
         name="body"
         value={inputState.body}
         onChange={handleChange}
-        className="peer block py-2 w-full text-sm text-gray-900 bg-transparent rounded-none border-0 border-b-2 border-gray-300 focus:border-blue-600 focus:outline-none focus:ring-0 appearance-none"
+        className="peer block py-2 w-full text-sm text-gray-900 bg-transparent rounded-none border-0 border-b-2 border-gray-300 focus:border-blue-600 focus:outline-none focus:ring-0"
         placeholder=" "
         onFocus={() =>
           setInputState((prevInputState) => ({
