@@ -58,14 +58,14 @@ export const ReviewCard: VFC<Props> = (props) => {
       if (!currentUser) {
         return;
       }
-      setLikesState({
-        likes: [
-          {
-            user_id: currentUser.id,
+      setLikesState((prevLikesState) => {
+        return {
+          likes: prevLikesState.likes?.concat({
             review_id: reviewId,
-          },
-        ],
-        isLiked: true,
+            user_id: currentUser.id,
+          }),
+          isLiked: true,
+        };
       });
     },
     [currentUser]
