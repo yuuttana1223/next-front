@@ -6,6 +6,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "fix": "run-s -c fix:lint fix:prettier",
+    "fix:lint": "next lint --fix .",
+    "prettier": "prettier --check .",
+    "fix:prettier": "prettier --write .",
     "prepare": "husky install"
   },
   "dependencies": {
