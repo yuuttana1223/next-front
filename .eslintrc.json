@@ -1,14 +1,37 @@
 {
-  "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "tailwindcss"],
   "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:tailwindcss/recommended",
     "next/core-web-vitals",
+    "plugin:tailwindcss/recommended",
     "prettier"
   ],
+  "plugins": ["tailwindcss"],
   "rules": {
-    "tailwindcss/classnames-order": "error"
+    // 変数を再割り当てしないものはconstで宣言する
+    "prefer-const": "error",
+    // 未使用変数禁止
+    "no-unused-vars": "error",
+    // var禁止
+    "no-var": "error",
+    // console.log()禁止
+    "no-console": "error",
+    // == 禁止
+    "eqeqeq": "error",
+    // else return 禁止
+    "no-else-return": "error",
+    // else {if 禁止}
+    "no-lonely-if": "error",
+    // if () 入れ子の数
+    "max-depth": ["warn", 4],
+    // () => コールバックのネスト数
+    "max-nested-callbacks": ["warn", 4],
+    // マジックナンバー
+    "no-magic-numbers": "warn",
+    // async関数でawaitを使う
+    "require-await": "warn",
+    "react/function-component-definition": [
+      "warn",
+      // アロー関数指定
+      { "namedComponents": "arrow-function" }
+    ]
   }
 }
