@@ -6,6 +6,7 @@ type Props = {
   isOpen: boolean;
   message: string;
   closeModal: () => void;
+  // eslint-disable-next-line no-unused-vars
   handleDelete: () => void | ((commentId: number) => void);
 };
 
