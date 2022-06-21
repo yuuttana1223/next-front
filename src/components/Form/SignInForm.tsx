@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import { AuthContext } from "src/providers/AuthProvider";
 import toast from "react-hot-toast";
 import { ProcessingLoader } from "src/components/Loader/ProcessingLoader";
+import { STATUS_CODE } from "src/utils/statusCode";
 
 export type Inputs = {
   email: string;
@@ -27,7 +28,7 @@ export const SignInForm: VFC = () => {
     setProcessing(true);
     signIn(params)
       .then((res) => {
-        if (res.status === 200) {
+        if (res.status === STATUS_CODE.OK) {
           Cookies.set("access_token", res.headers["access-token"]);
           Cookies.set("client", res.headers["client"]);
           Cookies.set("uid", res.headers["uid"]);

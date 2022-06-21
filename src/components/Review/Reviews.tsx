@@ -20,6 +20,7 @@ import { useRouter } from "next/router";
 import { PATH } from "src/urls/path";
 import { Pagination } from "src/components/Pagination";
 import { AuthContext } from "src/providers/AuthProvider";
+import { STATUS_CODE } from "src/utils/statusCode";
 
 export type SelectStateType = {
   reviews?: Review[];
@@ -95,7 +96,7 @@ export const Reviews: VFC = () => {
       setLoading(true);
       fetchReviews(router.asPath)
         .then((res) => {
-          if (res.status === 200) {
+          if (res.status === STATUS_CODE.OK) {
             sortSelect(
               res.data,
               selects.find(

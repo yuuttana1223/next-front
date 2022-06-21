@@ -11,13 +11,14 @@ import toast from "react-hot-toast";
 import { AuthContext } from "src/providers/AuthProvider";
 import Link from "next/link";
 import { PATH } from "src/urls/path";
+import { STATUS_CODE } from "src/utils/statusCode";
 export const SettingDropDown = () => {
   const { currentUser, setCurrentUser } = useContext(AuthContext);
 
   const handleClick = useCallback(() => {
     signOut()
       .then((res) => {
-        if (res.status === 200) {
+        if (res.status === STATUS_CODE.OK) {
           setCurrentUser(undefined);
           toast.success("ログアウトしました");
         } else {
@@ -52,7 +53,7 @@ export const SettingDropDown = () => {
             <span className="ml-2">{currentUser?.name}</span>
           </p>
           <Menu.Item>
-            {({ active }) => (
+            {({ active }: { active: boolean }) => (
               <button
                 className={`${
                   active ? "bg-gray-200" : ""
@@ -68,7 +69,7 @@ export const SettingDropDown = () => {
             )}
           </Menu.Item>
           <Menu.Item>
-            {({ active }) => (
+            {({ active }: { active: boolean }) => (
               <button
                 onClick={handleClick}
                 className={`${

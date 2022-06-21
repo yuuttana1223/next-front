@@ -15,7 +15,7 @@ export const Accordion: VFC<Props> = (props) => {
 
   return (
     <Disclosure>
-      {({ open }) => (
+      {({ open }: { open: boolean }) => (
         <>
           <Disclosure.Panel as="ul">
             {props.reviews?.map((review) => (

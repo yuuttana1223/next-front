@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { VFC, useState, useCallback } from "react";
 import { ReviewCard } from "src/components/Review/ReviewCard";
 import { Loader } from "src/components/Loader";

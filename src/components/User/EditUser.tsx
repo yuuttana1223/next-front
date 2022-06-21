@@ -9,6 +9,7 @@ import { AuthContext } from "src/providers/AuthProvider";
 import { patchUser } from "src/apis/auth";
 import toast from "react-hot-toast";
 import { ProcessingLoader } from "src/components/Loader/ProcessingLoader";
+import { STATUS_CODE } from "src/utils/statusCode";
 
 export type Inputs = {
   name: string;
@@ -24,7 +25,7 @@ export const EditUser: VFC = () => {
     setProcessing(true);
     patchUser(params, currentUser?.id)
       .then((res) => {
-        if (res.status === 200) {
+        if (res.status === STATUS_CODE.OK) {
           setCurrentUser(res.data);
           toast.success("ユーザー情報を更新しました");
           router.push(PATH.ROOT);

@@ -21,6 +21,7 @@ import { deleteFavorite, postFavorite } from "src/apis/favorite";
 import { useAllFavorites } from "src/hooks/useAllFavorites";
 import { useAllComments } from "src/hooks/useAllComments";
 import { useFavoriteReviews } from "src/hooks/useFavoriteReviews";
+import { STATUS_CODE } from "src/utils/statusCode";
 
 type Props = {
   review: Review;
@@ -95,7 +96,7 @@ export const ReviewCard: VFC<Props> = (props) => {
   const handleDelete = useCallback(() => {
     deleteReview(props.review?.id)
       .then((res) => {
-        if (res.status === 204) {
+        if (res.status === STATUS_CODE.NO_CONTENT) {
           mutate(
             `${API_URL}/reviews`,
             reviews?.filter((review) => review.id !== props.review?.id)
@@ -120,7 +121,7 @@ export const ReviewCard: VFC<Props> = (props) => {
       undoLike();
       deleteLike(reviewId)
         .then((res) => {
-          if (res.status === 204) {
+          if (res.status === STATUS_CODE.NO_CONTENT) {
             mutate(
               `${API_URL}/likes`,
               likes.filter(
@@ -140,7 +141,7 @@ export const ReviewCard: VFC<Props> = (props) => {
       likeReview(reviewId);
       postLike(reviewId)
         .then((res) => {
-          if (res.status === 201) {
+          if (res.status === STATUS_CODE.CREATED) {
             mutate(`${API_URL}/likes`, [...likes, res.data]);
           } else {
             undoLike();
@@ -169,7 +170,7 @@ export const ReviewCard: VFC<Props> = (props) => {
       setIsFavorite(false);
       deleteFavorite(reviewId)
         .then((res) => {
-          if (res.status === 204) {
+          if (res.status === STATUS_CODE.NO_CONTENT) {
             mutate(`${API_URL}/favorites`, [
               ...favorites.filter(
                 (favorite) => favorite.review_id !== reviewId
@@ -190,7 +191,7 @@ export const ReviewCard: VFC<Props> = (props) => {
       setIsFavorite(true);
       postFavorite(reviewId)
         .then((res) => {
-          if (res.status === 201) {
+          if (res.status === STATUS_CODE.CREATED) {
             mutate(`${API_URL}/favorites`, [...favorites, res.data]);
             mutate(`${API_URL}/users/${currentUser?.id}/favorites`, [
               ...favoriteReviews,

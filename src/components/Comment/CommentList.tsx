@@ -10,8 +10,10 @@ import { API_URL } from "src/urls/api";
 import { DeleteModal } from "src/components/Modal/DeleteModal";
 import { useAllComments } from "src/hooks/useAllComments";
 import { useRouter } from "next/router";
+import { STATUS_CODE } from "src/utils/statusCode";
 
 type Props = {
+  // eslint-disable-next-line no-unused-vars
   handleEdit: (commentId?: number, body?: string) => void;
 };
 
@@ -49,7 +51,7 @@ export const CommentList: VFC<Props> = (props) => {
       closeModal();
       deleteComment(reviewId, commentId)
         .then((res) => {
-          if (res.status === 204) {
+          if (res.status === STATUS_CODE.NO_CONTENT) {
             mutate(
               `${API_URL}/comments`,
               comments?.filter((comment) => comment.id !== commentId)

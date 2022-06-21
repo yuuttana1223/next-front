@@ -8,7 +8,9 @@ import {
 import { Comment } from "src/apis/reviewComment";
 
 type Props = {
+  // eslint-disable-next-line no-unused-vars
   openModal: (commentId: number) => void;
+  // eslint-disable-next-line no-unused-vars
   handleEdit: (commentId?: number, body?: string) => void;
   comment: Comment;
 };
@@ -34,7 +36,7 @@ export const DropDown: VFC<Props> = (props) => {
       >
         <Menu.Items className="absolute right-0 z-10 py-2 w-40 bg-white rounded-md divide-y divide-gray-100 focus:outline-none ring-black/5 shadow-lg origin-top-right">
           <Menu.Item>
-            {({ active }) => (
+            {({ active }: { active: boolean }) => (
               <button
                 onClick={() =>
                   props.handleEdit(props.comment.id, props.comment.body)
@@ -53,7 +55,7 @@ export const DropDown: VFC<Props> = (props) => {
             )}
           </Menu.Item>
           <Menu.Item>
-            {({ active }) => (
+            {({ active }: { active: boolean }) => (
               <button
                 onClick={() => props.openModal(props.comment.id)}
                 className={`${

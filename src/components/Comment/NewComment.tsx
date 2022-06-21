@@ -8,8 +8,10 @@ import { patchComment } from "src/apis/reviewComment";
 import { CommentState } from "src/components/Review/Review";
 import { useAllComments } from "src/hooks/useAllComments";
 import { useRouter } from "next/router";
+import { STATUS_CODE } from "src/utils/statusCode";
 
 type Props = {
+  // eslint-disable-next-line no-unused-vars
   handleEdit: (commentId?: number, body?: string) => void;
   comment: CommentState;
 };
@@ -49,7 +51,7 @@ export const NewComment: VFC<Props> = (props) => {
     if (props.comment.id) {
       patchComment(inputState.body, reviewId, props.comment.id)
         .then((res) => {
-          if (res.status === 200) {
+          if (res.status === STATUS_CODE.OK) {
             props.handleEdit(undefined, "");
             mutate(
               `${API_URL}/comments`,
@@ -68,7 +70,7 @@ export const NewComment: VFC<Props> = (props) => {
     } else {
       postComment(inputState.body, reviewId)
         .then((res) => {
-          if (res.status === 201) {
+          if (res.status === STATUS_CODE.CREATED) {
             mutate(`${API_URL}/comments`, [...comments, res.data]);
             toast.success("コメントを投稿しました");
           } else {

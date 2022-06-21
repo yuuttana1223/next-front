@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 import { Loader } from "src/components/Loader";
 import { ErrorMessage } from "src/components/Message/ErrorMessage";
 import { ProcessingLoader } from "src/components/Loader/ProcessingLoader";
+import { STATUS_CODE } from "src/utils/statusCode";
 
 export type FormValues = Omit<Review, "id" | "created_at" | "updated_at"> & {
   lecture_name2?: string;
@@ -38,7 +39,7 @@ export const ReviewForm: VFC<Props> = (props) => {
     if (props.review) {
       patchReview(params, props.review.id)
         .then((res) => {
-          if (res.status === 200) {
+          if (res.status === STATUS_CODE.OK) {
             mutate(
               `${API_URL}/reviews`,
               reviews?.map((review) =>
@@ -60,7 +61,7 @@ export const ReviewForm: VFC<Props> = (props) => {
     } else {
       postReview(params)
         .then((res) => {
-          if (res.status === 201) {
+          if (res.status === STATUS_CODE.CREATED) {
             mutate(`${API_URL}/reviews`, [{ ...reviews }, res.data]);
             toast.success("レビューを作成しました", {
               duration: 10000,

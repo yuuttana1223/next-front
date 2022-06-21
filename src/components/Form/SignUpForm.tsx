@@ -12,6 +12,7 @@ import { AuthContext } from "src/providers/AuthProvider";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import { ProcessingLoader } from "src/components/Loader/ProcessingLoader";
+import { STATUS_CODE } from "src/utils/statusCode";
 
 type Inputs = {
   name: string;
@@ -29,7 +30,7 @@ export const SignUpForm: VFC = () => {
   const onSubmit: SubmitHandler<Inputs> = (params) => {
     signUp(params)
       .then((res) => {
-        if (res.status === 200) {
+        if (res.status === STATUS_CODE.OK) {
           Cookies.set("access_token", res.headers["access-token"]);
           Cookies.set("client", res.headers["client"]);
           Cookies.set("uid", res.headers["uid"]);
