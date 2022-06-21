@@ -1,5 +1,8 @@
+/**
+ * 遷移できるページのURL
+ */
 export const PATH = {
-  ROOT: "/",
+  ROOT: "/", // レビューの一覧ページ
   USERS: {
     SIGN_IN: "/users/sign_in",
     SIGN_UP: "/users/sign_up",
@@ -11,4 +14,4 @@ export const PATH = {
     EDIT: (id?: number) => `/reviews/${id}/edit`,
     NEW: "/reviews/new",
   },
-};
+} as const;
